@@ -1,0 +1,105 @@
+---
+title: "케글 대출고객 분석"
+author: "BBJ"
+date: "2022-08-08"
+output: html_document
+---
+
+## 작업 경로 확인 및 설정
+```{r}
+setwd("C:/Git_bbj/Team4_week7/박병준")
+getwd()
+```
+
+## 대출고객 분석 파일 데이터프레임으로 불러오기
+```{r}
+loanDF <- read.csv('Loan payments data.csv', header = T)
+View(loanDF)
+head(loanDF)
+```
+
+## 정보 및 컬럼들의 타입 확인
+```{r}
+summary(loanDF)
+```
+
+## 불필요한 변수 제거
+```{r}
+# loanDF <- loanDF %>% select(-Loan_ID)
+# head(loanDF)
+```
+
+## 결측치 개수 및 분포 확인, 결측지 처리
+  * loan_status : 대출 상환 유무
+  * PAIDOFF : 상환 기간 내 채무 이행, COLLECTION : 채무 불이행(연체), COLLECTION_PAIDOFF : 대출금 상환 만기 후 상환 완료
+  * paid_off time : 고객이 기간 내 상환한 날짜, past_due_days : 만기 후 지난 대출 기간
+  * 채무 이행자(PAIDOFF)는 past_due_days가 없음.
+  * 결측치를 통해 추정할 수 있는 상환 기간 내 채무 이행자  : 300명
+  * 결측치 제거할 필요 없음.
+```{r}
+library(VIM) # # Missing values with VIM::aggr()
+aggr(loanDF, numbers = T, prop = F)
+# loanDF[!complete.cases(loanDF), ] # 결측치가 포함되지않은 정보만
+head(loanDF[complete.cases(loanDF), ]) # 결측지가 포함된 정보만
+sum(is.na(loanDF)) # 결측치 개수 확인
+# loanDF$past_due_days <- ifelse(is.na(loanDF$past_due_days), mean(loanDF$past_due_days, na.rm = T), loanDF$past_due_days)
+```
+
+# 채무 이행별 고객 수 분류
+```{r}
+levels(loanDF$loan_status)
+table(loanDF$loan_status)
+barplot(table(loanDF$loan_status), col = 5:8, main = '기간 내 대출금 상환을 한 고객과 그렇지 못한 고객은 각 몇 명인가?')
+```
+
+## 대출상환 상태에 따른 대출 원금의 도수분포 확인
+  * PAIDOFF, COLLECTION, COLLECTION_PAIDOFF와 Principal
+  * PAIDOFF는 기간 내 채무 이행을 완료하였으므로 제외
+```{r}
+# install.packages("dplyr") # Used for almost all data handling, %>% 사용
+library(dplyr)
+loan_group <- loanDF %>%
+  filter(loan_status %in% c("COLLECTION", "COLLECTION_PAIDOFF")) %>%
+  group_by(loan_status, Principal) %>%
+  summarise(count = n())
+loan_group
+```
+
+# 그렇다면 고객들이 대출한 돈은 얼마인가?
+## ***대출 원금이 많을 수록 기간 내에 갚지 못하는 경향성***
+```{r}
+library(ggplot2)
+ggplot(data = loan_group, aes(x = Principal, y = count, fill = loan_status)) + geom_bar(stat = "identity", position = "dodge") + ggtitle('대출상환 상태에 따른 대출 원금은 얼마인가?') +   theme(plot.title = element_text(family = "serif", face = "bold", hjust=0.5, size=18, color='black'))
+```
+
+## 성별에 따른 대출 수
+  * Principal과 Gender
+```{r}
+table(loanDF$Gender)
+barplot(table(loanDF$Gender), col = c(14,5))
+```
+  
+## 대출상환 상태에 따른 성별의 도수분포 확인
+```{r}
+loan_gender <- loanDF %>% 
+  group_by(loan_status, Gender) %>% 
+  summarise(count = n()) %>% 
+  mutate(percent = count / sum(count))
+loan_gender
+```
+
+# 그렇다면 성별에 따른 대출 원금은 얼마인가?
+```{r}
+ggplot(data = loan_gender, aes(x = Gender, y = count, fill = loan_status)) + geom_bar(stat = "identity", position = "dodge")
+```
+
+
+
+
+
+
+
+
+
+
+
