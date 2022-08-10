@@ -1,5 +1,5 @@
 ---
-title: "2장. R 데이터 탐색과 통계분석"
+title: "2장. R 데이터 탐색과 통계분석 2-1 ~ 2-5"
 author: "BBJ"
 date: "2022-08-10"
 output: html_document
@@ -332,6 +332,68 @@ curve(dnorm(x, mean(height), sd(X.bar)), 160, 180, col = 'red', add = T, lwd = 3
       - 표본에서 관측한 통계량보다 더 극단적인 값이 발생할 확률
       - p-value가 𝛼보다 크다: 귀무가설을 기각할 수 있는 증거가 부족함
       - p-value가 𝛼보다 작다: 귀무가설을 기각할 수 있는 증거가 충분함  
+```{r}
+cor(iris[, -5])
+cor.test(iris$Petal.Width, iris$Petal.Length)
+
+# • 100번의 동전을 던져서 앞면이 60번 나왔다면, 이 동전은 앞면이 더 많이 나오는 동전일까?
+# 𝐻0: 이 동전은 앞면이 더 많이 나오지 않는다(성공확률이 𝑝 ≤ 0.5이다).
+# 𝐻1: 이 동전은 앞면이 더 많이 나온다(성공확률이 𝑝 > 0.5이다).
+
+# p-value<0.05: 95%의 신뢰구간 바깥쪽에 𝑝 = 0.5가 위치함. 따라서, 유의수준 𝛼 = 0.05에서 귀무가설을 기각할 수 있다
+binom.test(x = 60, n = 100, p = 0.5, alternative = 'greater')
+
+qnorm(p = 0.5, mean = 50, sd = 10)
+qnorm(p = 0.68, mean = 50, sd = 10)
+qnorm(p = 0.975, mean = 50, sd = 10)
+qnorm(p = 0.025, mean = 50, sd = 10)
+qnorm(p = 0.995, mean = 50, sd = 10)
+cat('\n')
+pnorm(q = 50, mean = 50, sd = 10)
+pnorm(q = 54.67699, mean = 50, sd = 10)
+pnorm(q = 69.59964, mean = 50, sd = 10)
+pnorm(q = 30.40036, mean = 50, sd = 10)
+pnorm(q = 75.75829, mean = 50, sd = 10)
+
+binom.test(x = 65, n = 100, p = 0.5)
+binom.test(x = 60, n = 100, p = 0.5, conf.level = 0.01)
+```
+
+## 정규성 검정: normality test
+ -  • 정규성 가정: 통계분석의 여러 검정방법들이 데이터가 정규분포임을 가정
+ -    - 정규성을 가정하는 통계분석 방법을 사용할 때는 정규성을 검정해야 함
+ -  • 정규성 검정: normality test
+ -    - 귀무가설: 데이터의 분포가 정규분포를 따른다.
+ -    - 대립가설: 데이터의 분포가 정규분포를 따르지 않는다.
+  
+ -  • 샤피로-윌크 검정: Shapiro-Wilk normality test
+ -    - 귀무가설: 표본 데이터가 정규성을 만족한다. 
+ -      • 유의수준 0.05를 적용하면, 
+ -      • p-value가 0.05보다 클 때 정규성을 만족한다고 주장할 수 있음
+ -    - shapiro.test(x)
+ -      • x: a numeric vector of data values.
+```{r}
+shapiro.test(survey$Height)
+hist(survey$Height)
+
+shapiro.test(survey$Age)
+shapiro.test(iris$Petal.Length)
+shapiro.test(mtcars$mpg)
+
+qqnorm(survey$Height, col = 'skyblue')
+qqline(survey$Height, col = 'tomato', lwd = 3)
+
+qqnorm(survey$Age, col = 'skyblue')
+qqline(survey$Age, col = 'tomato', lwd = 3)
+```
+
+
+
+
+
+
+
+
 
 
 
