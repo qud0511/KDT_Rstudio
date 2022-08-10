@@ -1,0 +1,5 @@
+"0",""
+"0","x <- seq(0, 100, length = 100)"
+"0","y <- dunif(x, min = 0, max = 100)"
+"0","plot(x, y, type = 'l',"
+"0","     col = 'hotpink', lwd = 3)"
