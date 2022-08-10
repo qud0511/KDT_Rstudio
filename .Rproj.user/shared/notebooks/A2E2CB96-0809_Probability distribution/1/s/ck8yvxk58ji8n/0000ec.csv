@@ -1,1 +1,0 @@
-"0","curve(dnorm(x, 50, 5), 25, 75, lty=2, lwd=4, col='red', add=T)"

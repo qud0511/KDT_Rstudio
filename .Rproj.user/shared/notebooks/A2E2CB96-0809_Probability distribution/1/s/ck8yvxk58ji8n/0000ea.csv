@@ -1,5 +1,0 @@
-"0","# lwd : 선 두께"
-"0",""
-"0","n_sim <- 10000"
-"0","y <- rbinom(n_sim, 100, 0.5)"
-"0","hist(y, xlab='X', ylab='mass', main ='B(100, 0.5)', prob = T, breaks = 30)"
