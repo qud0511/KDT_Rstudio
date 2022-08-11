@@ -117,8 +117,9 @@ cor(x, y)
 model <- lm(y ~ x)
 abline(model, col = 'tomato', lwd = 2)
 
+summary(model)
 
-# ----PPT 자료
+# ----PPT 자료, 경사하강법 Gradtent Descent Method
 plot(x, y, pch = 19, col = "steelblue", xlim = c(2, 10), ylim = c(5, 30))
 abline(model, lwd = 2, col = "steelblue")
 abline(a = intercept + 5, b = slope, lty = 2, lwd = 2, col = "orange")
@@ -129,6 +130,15 @@ legend(x = 2, y = 30, lwd = 2, col = "steelblue",
 legend = paste("y =", intercept, "+", slope, "* x"))
 ```
 
+```{r}
+x <- runif(n = 100, min = 0, max = 100)
+y <- 3 * x + 5 + rnorm(100, 0, 20) # 플러스마이너스 n정도 흔들기
+plot(x, y, pch = 19, col = 'skyblue')
+model <- lm(y ~ x)
+abline(model, col = 'tomato', lwd = 2)
+
+abline(a = 1, b = 5, col = 'red', lwd = 1, lty = 2)
+```
 
 
 
