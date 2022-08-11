@@ -1,0 +1,194 @@
+---
+title: "F-분포와 분산분석"
+author: "BBJ"
+date: "2022-08-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 2-9장
+
+## 평균검정과 분산분석:
+  • 평균검정: t-test
+    - 두 개의 표본을 이용하여 각각 대응되는 두 개의 모집단 평균이 동일한지 검정
+  • 분산분석: ANOVA (analysis of variance)
+    - 세 개 이상의 표본집단에서 여러 모집단 간의 평균과 동일성을 검정
+    ▪ 분산분석 사례:
+      • ADHD(주의력결핍-과잉행동장애)에 대한 두 가지 심리치료 방법의 효과 비교
+        - A: 첫 번째 심리치료, B: 두 번째 심리치료
+        - 10명의 실험 참여자를 모집한 후 무작위로 A/B로 나눔
+        - 심리치료 후 ADHD-RS(ADHD 평가점수) 측정
+        
+    ▪ 일원 분산분석: one-way ANOVA
+      • 집단 간 일원 분산분석: between-groups
+        - 독립변수: 심리치료 방법(A/B)
+      • 집단 내 일원분산분석: within-groups
+        - 독립변수: 심리치료 기간(4주/16주)
+```{r}
+
+# ▪ F-분포: F-distribution
+# • F-value는 두 개의 자유도에 의해 분포의 모양이 결정되는 F-분포를 따른다.
+x <- seq(0, 4, length=100)
+F.1 <- df(x, df1=1, df2=30)
+F.5 <- df(x, df1=5, df2=25)
+F.25 <- df(x, df1=25, df2=5)
+plot(x, F.1, lty=1, lwd=3, col="black", type="l", ylim=c(0, 1))
+lines(x, F.5, lty=2,lwd=3, col="blue")
+lines(x, F.25, lty=3, lwd=3, col="red")
+legend('topright', lty=c(1, 2, 3), col=c("black", "blue", "red"), 
+legend=c("df = 1, 30", "df = 5, 25", "df = 25, 5"))
+
+# • 특정 F값에 대응되는 유의확률 구하기
+pf(9.59, df1=1, df=8, lower.tail=FALSE)
+
+# • 특정 F값에 대응되는 유의확률 구하기
+pf(9.59, df1=1, df=8, lower.tail=FALSE)
+```
+
+## 2-10장
+## 일원 분산분석과 이원 분산분석
+
+# ▪ 일원 분산분석: one-way ANOVA
+  • 집단을 구분하는 독립변수가 한 개인 경우에 모집단 간 평균의 동일성 검정
+  • 예제) 내장 데이터셋인 InsectSprays 데이터셋을 이용한 일원 분산분석
+```{r}
+str(InsectSprays)
+summary(InsectSprays)
+table(InsectSprays$spray)
+
+round(tapply(InsectSprays$count, INDEX = list(InsectSprays$spray), FUN = mean), 3)
+boxplot(count ~ spray, data = InsectSprays, col = rainbow(6))
+
+aov.result <- aov(count ~ spray, data = InsectSprays)
+summary(aov.result)
+
+TukeyHSD(aov.result)
+```
+
+```{r}
+# • 집단별 평균도표(mean plot) 그리기
+# install.packages('gplots')
+library(gplots)
+plotmeans(count ~ spray, data=InsectSprays,
+main="Performance of Insect Sprays\nwith 95% CI of Mean", xlab="Type of Sprays", ylab="Insect Count",  barcol="tomato", barwidth=3, col="cornflowerblue", lwd=2)
+```
+
+```{r}
+# • 일원 분산분석: 살충제 간 살충효과의 평균이 동일한지 통계적으로 검정
+sprays.aov <- aov(count ~ spray, data=InsectSprays)
+sprays.aov
+summary(sprays.aov)
+
+# • 분산분석은 귀무가설만 기각: 모집단평균이 모두 동일하다는 주장을 기각
+# • 개별 집단 간 평균의 차이 확인: 어느 집단과 어느 집단이 서로 달라서 이러한 결과가 나왔는가?
+model.tables(sprays.aov, type="mean")
+model.tables(sprays.aov, type="effects")
+
+# • 사후검정(post-hoc test): 두 살충제 간의 살충효과가 통계적으로 유의한지 검정
+# • 다중비교를 통한 Tukey’s HSD(honest significant diff.) 검정
+sprays.compare <- TukeyHSD(sprays.aov) 
+sprays.compare
+
+sprays.compare$spray['D-C',]
+plot(TukeyHSD(sprays.aov), col="blue", las=1)
+```
+
+```{r}
+# • Tukey HSD 다중비교 결과를 glht() 함수로 확인
+# install.packages('mutlcomp') 현재 버전에서는 설치 못함?
+# library(multcomp)
+# tuk.hsd <- glht(model=sprays.aov, linfct=mcp(spray="Tukey"))
+
+# plot(cld(tuk.hsd, level=0.05), col="orange")
+```
+
+### 분산분석의 가정과 진단
+  • 분산분석을 위해서는 관측값은 일반적으로 다음 조건을 충족해야 함
+  - 정규성(normality): 종속변수는 정규분포를 따른다.
+  - 등분산성(equality of variance): 각 집단의 분포는 모두 동일한 분포를 가진다.
+```{r}
+library(car)
+qqPlot(InsectSprays$count, pch=20, col="deepskyblue", id=FALSE, main="Q-Q Plot", xlab="Theoretical Quantiles", ylab="Sample Quantiles")
+
+# • 샤피로-윌크 검정을 통해 정규성 충족 여부를 통계적으로 검정
+shapiro.test(InsectSprays$count)
+
+# • 이상점의 존재여부를 통계적으로 검정
+outlierTest(sprays.aov)
+
+# • 레벤 검정이나 바틀렛 검정을 통해 집단 간 분산의 동일성 여부 검정
+leveneTest(count ~ spray, data=InsectSprays)
+bartlett.test(count ~ spray, data=InsectSprays)
+
+# • 등분산의 가정을 충족하지 못할때: oneway.test() 함수를 이용한 일원분산분석
+oneway.test(count ~ spray, data=InsectSprays)
+oneway.test(count ~ spray, data=InsectSprays, var.equal=TRUE)
+```
+# ------------------------------------------------
+# 이원 분산분석
+
+▪ 이원 분산분석: two-way ANOVA
+  • 집단을 구분하는 독립변수가 두 개인 경우에 모집단 간 평균의 동일성 검정
+  • 두 개의 주 효과와 하나의 상호작용 효과를 검정
+    - 주효과 검정: 각 독립변수에 의해 만들어지는 집단 간 평균의 차이 검정
+      • 두 독립변수가 각각 개별적으로 종속변수에 유의한 영향을 미치는가?
+    - 상호작용효과 검정: 두 독립변수의 조합에 의해 만들어지는 평균의 차이 검정
+      • 두 독립변수의 조합이 종속변수와 유의한 영향관계를 갖는가?
+```{r}
+# • ToothGrowth 데이터셋을 이용한 이원 분산분석 수행
+str(ToothGrowth)
+unique(ToothGrowth$dose)
+
+# ToothGrowth$dose <- factor(ToothGrowth$dose, levels = c(0.5, 1.0, 2.0), labels = c('Low','Median','High'))
+
+# • 각 집단별 요약통계량 계산: 각 집단의 크기와 집단별 평균 및 표준편차
+with(ToothGrowth, tapply(len, list(supp, dose), length))
+with(ToothGrowth, tapply(len, list(supp, dose), mean))
+with(ToothGrowth, tapply(len, list(supp, dose), sd))
+
+# with(ToothGrowth, tapply(len, list(SUPP=supp, DOSE=dose), mean))
+
+# boxplot(len ~ supp + dose, data = ToothGrowth, col = c('orange', 'tomato'))
+# boxplot(len ~ supp * dose, data = ToothGrowth, col = c('orange', 'tomato'))
+```
+```{r}
+# • aov() 함수를 이용하여 이원분산분석 수행
+ToothGrowth.aov <- aov(len ~ supp * dose, data=ToothGrowth)
+ToothGrowth.aov <- aov(len ~ supp + dose + supp:dose, data=ToothGrowth)
+summary(ToothGrowth.aov)
+
+# • aov() 함수를 이용하여 이원분산분석 수행
+model.tables(ToothGrowth.aov, type="means")
+
+# • 상자도표로 비타민C 보충제와 투여량의 조합에 따른 이빨 성장의 정도를 파악
+boxplot(len ~ supp * dose, data=ToothGrowth,
+col=c("deeppink", "yellowgreen"), las=1,
+xlab="Vitamin C Type", ylab="Tooth Growth",
+main="Effects of Vitamin C on Tooth Growth of Guinea Pigs")
+```
+
+```{r}
+# • 상호작용도표(interaction plot)으로 주효과와 상호작용효과 파악
+interaction.plot(x.factor=ToothGrowth$dose, trace.factor=ToothGrowth$supp,  response=ToothGrowth$len, las=1, type="b",pch=c(1, 19), col=c("blue", "red"), trace.label="Supplement", xlab="Dose Level", ylab="Tooth Length", main="Interaction Plot for Tooth Growth of Guinea Pigs")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

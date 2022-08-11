@@ -1,0 +1,114 @@
+---
+title: "R 통계분석 7장 ~"
+author: "BBJ"
+date: "2022-08-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 2-8장 
+
+## 8장 x제곱-분포와 x2-검정
+## 독립성검정과 적합성검정
+  • 교차표를 통해 범주형으로 수집된 두 변수의 조합별 빈도 파악
+  
+  • 독립성 검정: independence test
+    - 두 범주형 변수 간의 관련성이 모집단에서 존재하는지 검정
+    
+  • 적합성 검정: goodness-of-fit test
+    - 두 개 이상의 범주를 갖는 범주형 변수의 범주별 비율의 분포를 관측
+    - 관측된 범주별 빈도로 모집단에서 기대되는 비율 분포가 존재하는지 검정
+
+  • *카이스퀘어 검정: chi-square test*
+    • 교차표상의 응답 빈도를 바탕으로 범주형 변수 간의 관련성 검정
+    • 예) 안전벨트 착용과 승객 안전 간의 관계 분석
+      • 교통사고 환자의 안전벨트 착용 유무와 환자 상태를 조사한 교차표
+      # 설문조사 분석할 때 자주 사용됨.
+    ▪ 통계적 가설검정:
+      • 귀무가설: 안전벨트 착용과 승객 안전 간에는 관련이 없다
+      
+      • 관측빈도: observed count
+        - 실제로 관측된 값. 교차표상의 셀값
+      
+      • 기대빈도: expected count
+        - 귀무가설이 참이라는 전제하에 우리가 기대할 수 있는 빈도
+        • 기대빈도의 계산
+          - 귀무가설이 참이라면 안전벨트 착용 여부와 관계없이
+          - 두 집단 모두에게서 환자의 상태별 비율이 동일하게 나타날 것
+      
+      ▪ 카이스퀘어 분포
+        • 자유도에 따라 분포의 모양이 달라지며, 대체로 오른쪽으로 긴 꼬리를 가짐
+        • 제곱 분포의 자유도: 교차표를 구성하는 두 변수의 범주의 개수에 의해 결정
+          - 자유도 = (행 변수의 범주의 개수 − 1) × (열 변수의 범주의 개수 − 1)
+          - 자유도 = (교차표의 행 개수 − 1) × (교차표의 열 개수 − 1)
+```{r}
+v <- rchisq(n = 10000, df = 1)
+# random variable chi-square
+hist(v, col = 'orange')
+
+x <- seq(0, 15, length = 200)
+curve(dchisq(x, df = 1), 0, 15,
+      col = 'red', lwd = 2, lty = 1)
+curve(dchisq(x, df = 5), 0, 15,
+      col = 'green', lwd = 2, lty = 1, add = T)
+curve(dchisq(x, df = 10), 0, 15,
+      col = 'blue', lwd = 2, lty = 1, add = T)
+
+qchisq(p = 0.95, df = 1)
+qchisq(p = 2.5, df = 1)
+qchisq(p = 3.841459, df = 1)
+qchisq(p = 5, df = 1, lower.tail = F)
+
+mt <- matrix(c(1443, 151, 47, 1781, 312, 135), nrow = 3)
+mt
+
+df <- data.frame(mt)
+str(df)
+
+colnames(df) <- c('With', 'Without')
+df
+rownames(df) <- c('경상', '중상', '사망')
+
+oij <- c(1443, 1781, 151, 312, 47, 135) # 관측값
+eij <- c(1367, 1855.9, 196.0, 267.4, 77.1, 104.7) # 기대빈도값
+cs.value <- sum((oij-eij )^2 / eij )
+cs.value
+```
+
+```{r}
+Titanic
+class(Titanic)
+
+tb <- margin.table(Titanic, margin = c(4,1))
+class(tb)
+tb
+
+chisq.test(tb)
+
+# 두 범주형 변수 간의 관련성의 강도를 평가하기
+library(vcd)
+assocstats(tb)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
