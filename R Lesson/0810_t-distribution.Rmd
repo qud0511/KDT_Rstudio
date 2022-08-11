@@ -26,4 +26,91 @@ knitr::opts_chunk$set(echo = TRUE)
      - 표본의 크기가 충분히 크면(𝑛 ≥ 30)
        • t-분포의 분산이 정규분포의 분산과 거의 유사해짐(𝑛 ≈ 𝑛 − 1)
        
+```{r}
+v <- rt(n = 1000, df = 29)
+hist(v, col = 'skyblue', breaks = 20, prob = T)
+
+x <- seq(-4, 4, length = 200)
+curve(dt(x, df = 29), -4, 4, add = T,
+      col = 'tomato', lwd = 2, lty = 2)
+# df : degree of freedom(자유도)
+# lty : 점선 간격
+
+curve(dnorm(x), -4, 4, add = T, col = 'violet', lwd = 5, lty = 4)
+
+pt(q = 2.04523, df = 19)
+pt(q = 2.756386, df = 29)
+
+qt(p = 0.975, df = 29)
+qt(p = 0.995, df = 29)
+
+# • 구간추정:
+# • 임의의 표본으로부터 산출된 표본평균과 표준오차 정보를 바탕으로
+# • 95%의 신뢰도로 모집단평균이 포함되는 범위를 계산 가능
+```
+
+## MASS패키지의 cats 데이터셋을 이용한 일표본 평균검정
+```{r}
+library(MASS)
+data(cats)
+str(cats)
+cat('-----------------')
+table(cats$Sex)
+cat('-----------------')
+mean(cats$Bwt)
+cat('-----------------')
+tapply(cats$Bwt, INDEX = list(Sex = cats$Sex), mean)
+cat('-----------------')
+# 종속변수를 Bwt(심장무게)로 둠. 수치형
+# 독립변수를 Sex로 둠.
+t.test(Bwt ~ Sex, data = cats)
+cat('-----------------')
+t.test(Bwt ~ Sex, data = cats, conf.level = 0.89)
+cat('-----------------')
+
+str(sleep)
+t.test(extra ~ group, data = sleep, paired = T)
+
+cat('-----------------')
+# 귀무가설 : 고양이의 몸무게는 2.6kg이다.
+
+# One sample t-test
+t.test(x = cats$Bwt, mu = 2.6)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
