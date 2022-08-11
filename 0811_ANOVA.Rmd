@@ -176,6 +176,12 @@ interaction.plot(x.factor=ToothGrowth$dose, trace.factor=ToothGrowth$supp,  resp
 
 ```
 
+```{r}
+# • 조건부도표(conditioning plot)로 집단 간의 영향의 차이를 파악
+coplot(len ~ dose | supp, data=ToothGrowth, 
+col="steelblue", pch=19, panel=panel.smooth, lwd=2, col.smooth="darkorange",
+xlab="Dose Level", ylab="Tooth Length")
+```
 
 
 

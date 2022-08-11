@@ -1,0 +1,155 @@
+---
+title: "2-13강 선형회귀의 이해"
+author: "BBJ"
+date: "2022-08-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 2-13강 선형회귀의 이해
+▪ 회귀: regression
+  •‘회귀’의 사전적 의미: 되돌아감(어디로?)
+  • 회귀라는 용어의 유래:
+    - 프랜시스 골턴의 유전학 연구에서 유래함
+    - 회귀의 법칙: the law of regression
+  
+  • 프랜시스 골턴의 연구:
+    - 부모의 키와 자녀의 키는 유전적으로 어떤 관계가 있는가?
+    - 평균으로의 회귀: regression to the mean
+    
+  ▪ 프랜시스 골턴의 데이터셋: GaltonFamilies
+```{r}
+library(HistData)
+str(GaltonFamilies)
+
+df <- GaltonFamilies
+
+
+plot(df$midparentHeight, df$childHeight, pch = 19, col = adjustcolor("blue", alpha.f = 0.3))
+
+plot(jitter(childHeight) ~ jitter(midparentHeight), 
+     data = df,
+     col = adjustcolor('steelblue', alpha = 0.5),
+     pch = 19)
+```
+```{r}
+plot(jitter(childHeight) ~ jitter(midparentHeight), 
+     data = df,
+     col = adjustcolor('steelblue', alpha = 0.5),
+     pch = 19)
+
+cor(df$midparentHeight, df$childHeight) # 0.6374, 즉 2/3 가량 : 서장훈의 아들은 키는 일반적인 사람들보다 클것이다. 하지만 서장훈만큼이나, 서장훈보다 클지는 알 수 없다? -> 소인족, 거인족이 없는 이유를 증명..?
+model <- lm(childHeight ~ midparentHeight, data = df)
+model
+abline(model, col = "tomato", lty = 1, lwd = 3)
+```
+
+### 자녀의 성별에 따라 키의 분포도 달라지지 않을까?
+```{r}
+# 전체
+with(df,
+     plot(midparentHeight, childHeight, pch = 19,
+          col = ifelse(gender == 'male', color.m, color.f)))
+
+# 남자
+color.m <- adjustcolor('steelblue', alpha.f = 0.3)
+model.m <- lm(childHeight ~ midparentHeight,
+              data = subset(df, gender == 'male'))
+abline(model.m, col = 'blue', lty = 1, lwd =3)
+
+# 여자
+color.f <- adjustcolor('orange', alpha.f = 0.3)
+model.f <- lm(childHeight ~ midparentHeight,
+              data = subset(df, gender == 'female'))
+abline(model.f, col = 'tomato', lty = 1, lwd =3)
+
+```
+
+## ▪ 회귀분석과 선형회귀: 
+• 회귀분석: regression analysis
+  - 독립변수와 종속변수의 관계를 잘 설명하는 회귀식을 찾는 과정
+    • 선형회귀: linear regression 
+      - 독립변수와 종속변수의 관계가 선형일 때
+      - 선형 회귀식(직선의 방정식): 𝑦 = 𝛽 + 𝛼𝑥
+      - 선형 회귀식의 절편(intercept)과 기울기(slope)를 알면
+        • 독립변수와 종속변수의 관계를 설명, 또는, 예측할 수 있다.
+
+  ▪ 선형 회귀모델: linear regression model
+    • 회귀식: 𝑦 = 𝛽0 + 𝛽1𝑥
+    • 잔차(residual): 실제 데이터의 값(관측값)과 회귀식의 값(예측값)과의 차이
+      • 잔차 = 관측값 - 예측값
+```{r}
+set.seed(14)
+x <- runif(n = 7, min = 0, max = 10)
+y <- 3 + 2 * x + rnorm(n = 7, mean = 0, sd = 5)
+round(x, 2)
+round(y, 2)
+
+model <- lm(y ~ x, data = df)
+coef(model)
+intercept <- coef(model)[1]
+slope <- coef(model)[2]
+y.hat <- intercept + slope * x
+round(y.hat, 2)
+r <- y - y.hat
+round(r, 2)
+```
+
+  
+  ▪ 모형 적합: fitting a model
+    • 데이터(관측값)를 가장 잘 설명하는 선형 회귀식은?
+      - 데이터 전체를 고려했을 때 잔차가 가장 작은 직선의 방정식
+
+    • 평균절대오차: MAE, mean absolute error
+    
+    • 평균제곱오차: MSE, mean squared error
+    
+    • 제곱근 평균제곱오차: RMSE, rooted mean squared error
+```{r}
+x <- runif(n = 100, min = 0, max = 100)
+y <- 3 * x + 5 + rnorm(100, 0, 20) # 플러스마이너스 n정도 흔들기
+plot(x, y, pch = 19, col = 'skyblue')
+
+cor(x, y)
+model <- lm(y ~ x)
+abline(model, col = 'tomato', lwd = 2)
+
+
+# ----PPT 자료
+plot(x, y, pch = 19, col = "steelblue", xlim = c(2, 10), ylim = c(5, 30))
+abline(model, lwd = 2, col = "steelblue")
+abline(a = intercept + 5, b = slope, lty = 2, lwd = 2, col = "orange")
+abline(a = intercept - 5, b = slope, lty = 2, lwd = 2, col = "orange")
+abline(a = intercept, b = slope + 1, lty = 3, lwd = 2, col = "violet")
+abline(a = intercept, b = slope - 1, lty = 3, lwd = 2, col = "violet")
+legend(x = 2, y = 30, lwd = 2, col = "steelblue",
+legend = paste("y =", intercept, "+", slope, "* x"))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
