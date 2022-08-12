@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = F)
 ```
 
 ## 2-15장 회귀모델의 설명력
@@ -38,7 +39,41 @@ cor(df)
 library(corrgram)
 corrgram(df)
 
+# 다중 회귀분석
+lm(mpg ~ ., data = df)
+model <- lm(mpg ~ ., data = df)
+summary(model) # 귀무가설 기각 가능한 건 wt만? 0.05보다 크기 때문
+# Adjusted R-squared:  0.8227 관계 높음 
+
+# models <- lm(mpg ~ disp, wdrat + hp + wt)
+
+
+library(car)
+scatterplotMatrix(df, pch = 19, col = "steelblue", cex = 1.2,
+regLine = list(method = lm, lwd = 2, col = "tomato"),
+smooth = list(smoother = loessLine, spread = FALSE, 
+lwd.smooth = 2, col.smooth = "orange"))
 ```
+
+# 연습문제
+  * Kallge House Price 데이터에서
+  * 다중 선형 회귀의 변수 선택을 통해
+  * 최적의 독립 변수 조합을 찾아보시오.
+  * 1. 전진선택법으로 찾은 조합은? R2, Adjusted R2 값은?
+  * 2. 후진선택법으로 찾은 조합은? R2, Adjusted R2 값은?
+```{r}
+
+```
+
+  
+
+
+
+
+
+
+
+
 
 
 
