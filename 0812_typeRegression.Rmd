@@ -1,0 +1,89 @@
+---
+title: "2-14장 회귀분석 유형"
+author: "BBJ"
+date: "2022-08-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R 2-14장 회귀분석의 유형
+
+## 선형회귀의 유형:
+  • 단순 선형회귀: simple(univariate) linear regression
+    - 한 개의 독립변수와 종속변수 간의 단순한(일차) 선형 관계
+    
+  • 다중 선형회귀: multiple(multivariate) linear regression
+    - 두 개 이상의 독립변수와 종속변수 간의 선형 관계
+    
+  • 다항 선형회귀: polynomial linear regression
+    - 종속변수와 한 개의 독립변수의 다항식으로 구성된 비선형 관계
+
+## ▪ lm() 함수와 formula:
+  • lm(formula, data):
+    - formula: 종속변수와 독립변수 간의 관계를 설명하는 형식
+    - data: formula를 적용할 데이터 객체
+      - 종속변수 ~ 독립변수1 + 독립변수2 + 독립변수3
+
+▪ Prestige 데이터셋
+  • 캐나다의 인구조사 데이터(1971년): 변수 6개, 관측값 102개
+    - education: 재직자의 평균 교육기간 (years)
+    - income: 재직자의 평균 소득 (dollars)
+    - women: 여성 재직자의 비율
+    - prestige: 직업에 대한 명성 점수 (1960년대 중반에 실시된 사회 조사 결과)
+    - census: 캐나다의 직업 코드
+    - type: 직업 분류: bc: blue color, prof: professional, wc: white color
+```{r}
+# install.packages('Prestige')
+library(car)
+data(Prestige)
+df <- Prestige
+str(df)
+
+table(df$type)
+barplot(table(df$type))
+
+hist(df$income, breaks = 20)
+
+# 샤피로 테스트
+shapiro.test(df$income)
+# W = 0.81505, p-value = 5.634e-10 => 정규분포와는 무관한 분포이다.
+
+# hist 그래프를 보고 정규분포에 가까워보이는 것을 샤피로 테스트로 확인
+hist(df$prestige, col = rainbow(1), breaks = 20)
+shapiro.test(df$prestige)
+
+plot(df[, -(5:6)], pch = 19, col = 'steelblue')
+lm(income ~ education, data = df)
+cor(df[, -(5:6)])
+
+model <- lm(income ~ education, data = df)
+summary(model)
+# education과 prestige는 서로 영향을 받음. 그래서 이 영향을 반영하기 위해 패널티를 줘야함?
+
+plot(income ~ education, data = df, col = 'skyblue', pch =19)
+abline(model, col = 'red', lwd = 2)
+```
+
+## ▪ 단순 선형회귀: simple linear regression
+  • 교육기간과 평균소득 간에는 선형 관계가 있을까?
+  - 종속변수: 평균소득(income)
+  - 독립변수: 교육기간(education)
+```{r}
+cor(income ~ education,)
+plot(income ~ education, data = df, pch = 19, col = 'blue')
+model <- lm(income ~ education, data = df)
+abline(model, col = 'pink', lwd = 2)
+```
+
+
+
+
+
+
+
+
+
+
