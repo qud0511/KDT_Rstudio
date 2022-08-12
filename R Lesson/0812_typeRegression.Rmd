@@ -81,26 +81,52 @@ summary(model)
 model <- lm(income ~ women + prestige, data = df)
 summary(model)
 
+par(mfrow = c(2,2)) # matploblib의 subplot과 비슷
 plot(model)
+par(mfrow = c(1,1))
 
 library(stargazer)
 stargazer(model, type = 'text')
 ```
 
 ```{r}
+# overfitting 과적합, underfitting?
 
+model <- lm(income ~ education, data = df)
+plot(income ~ education, data = df,
+     col = 'skyblue', pch = 19)
+
+model <- lm(income ~ education, I(education^2), data = df)
+summary(model)
+abline(model)
+
+# install.packages('tidyverse')
+library(tidyverse)
+library(dplyr)
+md
 ```
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+------------------- PPT --------------------------
 ## ▪ 단순 선형회귀: simple linear regression
   • 교육기간과 평균소득 간에는 선형 관계가 있을까?
   - 종속변수: 평균소득(income)
   - 독립변수: 교육기간(education)
 ```{r}
-cor(income ~ education)
+cor(df$education, df$income)
 plot(income ~ education, data = df, pch = 19, col = 'blue')
 model <- lm(income ~ education, data = df)
 abline(model, col = 'pink', lwd = 2)
@@ -118,7 +144,17 @@ abline(model, col = 'pink', lwd = 2)
 
 
 
+## ▪ 다항 선형회귀: polynomial linear regression
+  • 종속변수를 독립변수의 다항식이 더 잘 설명하는 경우
+  - 다항 회귀식: 
+  𝑦 = 𝛽0 + 𝛽1𝑥1 + 𝛽2𝑥2 + ⋯ + 𝛽𝑛𝑥𝑛
+  • 교육기간과 평균소득의 관계를 직선보다 더 잘 설명하는 곡선이 있을까?
+    - 종속변수: 평균소득(income)
+    - 독립변수: 교육기간(education)
+overfitting 과적합, underfitting?
+```{r}
 
+```
 
 
 

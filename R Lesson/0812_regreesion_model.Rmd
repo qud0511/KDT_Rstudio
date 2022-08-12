@@ -1,0 +1,63 @@
+---
+title: "2-15강 회귀모델의 설명력"
+author: "BBJ"
+date: "2022-08-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 2-15장 회귀모델의 설명력
+▪ mtcars 데이터셋
+  • 자동차의 연비에 대한 데이터셋(1074년): 변수 11개, 관측값 32개
+    - mpg: 연비 (miles/gallon)
+    - cyl: 실린더 개수
+    - disp: 배기량 (cu. in.)
+    - hp: 마력
+    - drat: 기어비(후방 차축 비율)
+    - wt: 중량 (1000 lbs)
+    - qsec: ¼ 마일 시간
+    - vs: 엔진 (0=V-모양, 1=straight)
+    - am: 트랜스미션 (0=자동, 1=수동)
+    - gear: 전방 기어의 개수
+    - carb: 기화기의 개수
+```{r}
+df <- mtcars
+str(df)
+df <- mtcars[, c(1:6)] # mpg ~ wt
+str(df)
+
+plot(df, col = 'green')
+cor(df)
+
+# install.packages('corrplot')
+# library(corrplot)
+
+library(corrgram)
+corrgram(df)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
