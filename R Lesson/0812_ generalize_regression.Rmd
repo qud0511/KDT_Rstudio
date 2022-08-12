@@ -1,0 +1,82 @@
+---
+title: "2-16장 선형모델의 일반화"
+author: "BBJ"
+date: "2022-08-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## ▪ 선형모델의 일반화가 필요한 이유:
+  • 선형회귀분석을 위한 조건:
+    - 결과변수가 연속형 변수이면서 정규분포를 따라야 한다.
+  • 선형회귀분석을 위한 조건에 맞지 않는 경우:
+    - 결과변수가 범주형 변수일 때: 로지스틱 회귀분석
+    - 결과변수가 어떤 사건이 발생하는 횟수일 때: 포아송 회귀분석
+```{r}
+# plot(iris[, c(1, 5)])
+# plot(iris[iris$Species != 'versicolor', c(1, 5)])
+
+df <- split(iris, f = iris$Species)
+df <- rbind(df$setosa, df$versicolor)
+plot(df[, c(1,5)])
+```
+# ▪ 일반화 선형모델: generalized linear model
+    • 로지스틱 회귀분석: logistic regression analysis
+      - 결과변수가 범주형 변수일 때: 정규분포를 따르지 않음
+        • 이분 변수(binary variable): 예/아니오, 성공/실패, 생존/사망 등
+        • 다중 변수(multicategory variable): 우수/보통/미흡, A/B/AB/O 등
+      
+      ▪ 이항 로지스틱 회귀분석: binomial logistic regression analysis
+      • 결과변수가 이분형 범주일 때 특정 사건이 발생할 확률을 직접 추정
+        - 결과변수의 예측값이 항상 1(사건발생)과 0(미발생) 사이의 확률값
+        - 확률값이 0.5보다 크면 사건이 발생, 0.5보다 작으면 발생하지 않음
+        - 예) 기업부도가 발생할 확률
+      • 로지스틱 변환: logistic transformation
+        - 예측변수의 선형결합을 로그 변환한 결과변수로 나타냄
+      • 이항 로지스틱 회귀모델: binomial logistic regression model
+      • 𝑝: 이항 사건의 성공 확률(사건발생), 1 − 𝑝: 이항 사건의 실패 확률(미발생)
+ 
+        
+    • 포아송 회귀분석: Poisson regression analysis
+      - 결과변수가 어떤 사건이 발생하는 횟수일 때: 포아송 분포를 따름
+        • 연간 철도사고횟수, 월간 빈집털이횟수, 일간 상담횟수 등
+        • 횟수변수는 포아송 분포를 따르고, 평균과 분산은 종종 상관관계를 가짐
+          
+          ▪ 포아송 회귀분석: Poisson regression analysis
+            • 결과변수가 특정 기간 동안의 사건발생횟수(또는 개수)인 경우에 적용
+              - 한 시간 동안 걸려오는 상담전화 횟수
+              - 하루 동안 발생하는 범죄 횟수
+              - 한 달 동안 발생하는 교통사고 횟수 등
+              
+            • 포아송 회귀모델: Poisson regression model
+              - 링크함수는 ln 𝜆 이며, 확률분포는 포아송 분포를 따름
+              - ln 𝜆 = 𝛽0 + 𝛽1𝑥1 + 𝛽2𝑥2 + ⋯ + 𝛽𝑚𝑥𝑚
+            • 𝜆: 결과변수 𝑦의 평균
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
