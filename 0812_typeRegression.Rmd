@@ -87,3 +87,19 @@ abline(model, col = 'pink', lwd = 2)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
