@@ -67,15 +67,53 @@ plot(income ~ education, data = df, col = 'skyblue', pch =19)
 abline(model, col = 'red', lwd = 2)
 ```
 
+
+```{r}
+model <- lm(income ~ education + women + prestige, data = df)
+summary(model)
+
+model <- lm(income ~ education + women + prestige, data = df)
+summary(model)
+
+model <- lm(income ~ education + prestige, data = df)
+summary(model)
+
+model <- lm(income ~ women + prestige, data = df)
+summary(model)
+
+plot(model)
+
+library(stargazer)
+stargazer(model, type = 'text')
+```
+
+```{r}
+
+```
+
+
+
+
+
 ## ▪ 단순 선형회귀: simple linear regression
   • 교육기간과 평균소득 간에는 선형 관계가 있을까?
   - 종속변수: 평균소득(income)
   - 독립변수: 교육기간(education)
 ```{r}
-cor(income ~ education,)
+cor(income ~ education)
 plot(income ~ education, data = df, pch = 19, col = 'blue')
 model <- lm(income ~ education, data = df)
 abline(model, col = 'pink', lwd = 2)
+```
+
+## ▪ 다중 선형회귀: multiple linear regression
+  • 종속변수에 영향을 미치는 독립변수가 여러 개일 경우
+    - 다중 회귀식: 𝑦 = 𝛽0 + 𝛽1𝑥1 + 𝛽2𝑥2 + ⋯ + 𝛽𝑛𝑥𝑛
+  • 평균소득에 영향을 주는 요인은 무엇일까?
+    - 종속변수: 평균소득(income)
+    - 독립변수: 교육(education), 성별(women), 명성(prestige)
+```{r}
+
 ```
 
 
