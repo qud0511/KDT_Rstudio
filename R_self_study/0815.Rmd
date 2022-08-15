@@ -9,3 +9,54 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+```{r}
+
+library(MASS)
+
+str(survey)
+?survey
+levels(survey$W.Hnd)
+
+freq.tab <- table(survey$W.Hnd)
+freq.tab
+freq.prop <- prop.table(freq.tab)
+freq.prop
+
+barplot(freq.tab, col = rainbow(2), xlab = "Writing Hand", ylab = "Frequency", main = "Frequency table of wrting hand")
+
+survey$Height
+
+# survey$Height[!is.na(survey$Height)]
+
+height <- survey$Height
+mean(height, na.rm = T)
+quantile(height, probs = 0.9, na.rm = T)
+quantile(height, probs = c(0.25, 0.75), na.rm = T)
+hist(height, xlim = c(140, 210), ylim = c(0, 50))
+
+library(stargazer)
+stargazer(survey, type = 'text')
+
+mean(survey$Pulse, na.rm = T)
+table(survey$Sex)
+table(survey$Exer)
+
+tapply(survey$Pulse, INDEX = survey$Sex, FUN = mean, na.rm = T)
+with(survey, tapply(Pulse, Sex, mean, na.rm = T))
+
+tapply(survey$Pulse, INDEX = survey$Exer, FUN = mean, na.rm = T)
+
+
+
+
+
+```
+
+
+
+```{r}
+
+```
+
+     

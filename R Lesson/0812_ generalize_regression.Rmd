@@ -57,6 +57,9 @@ plot(df[, c(1,5)])
             • 𝜆: 결과변수 𝑦의 평균
 ```{r}
 library(robust)
+# library(help=robust)
+?library(robust)
+  
 data("breslow.dat")
 
 df <- breslow.dat
