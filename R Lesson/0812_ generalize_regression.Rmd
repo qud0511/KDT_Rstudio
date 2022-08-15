@@ -56,7 +56,28 @@ plot(df[, c(1,5)])
               - ln 𝜆 = 𝛽0 + 𝛽1𝑥1 + 𝛽2𝑥2 + ⋯ + 𝛽𝑚𝑥𝑚
             • 𝜆: 결과변수 𝑦의 평균
 ```{r}
+library(robust)
+data("breslow.dat")
 
+df <- breslow.dat
+str(df)
+df <- df[, c('Base', 'Age', 'Trt', 'sumY')]
+str(df)
+dim(df)
+
+model <- glm(sumY ~ ., data = df, family = poisson)
+summary(model)
+
+exp(coef(model))
+
+df <- split(iris, f = iris$Species)
+df <- rbind(df$setoas, df$versicolr)
+
+plot(df[, c(3,5)])
+
+df$Species <- as.integer(df$Species)
+glm(Species ~ Petal.Length, data = df, family = binomial(link = 'logit'))
+summary(model)
 ```
 
 
