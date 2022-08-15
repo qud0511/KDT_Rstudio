@@ -37,6 +37,8 @@ hist(height, xlim = c(140, 210), ylim = c(0, 50))
 
 library(stargazer)
 stargazer(survey, type = 'text')
+'
+
 
 mean(survey$Pulse, na.rm = T)
 table(survey$Sex)
@@ -47,8 +49,7 @@ with(survey, tapply(Pulse, Sex, mean, na.rm = T))
 
 tapply(survey$Pulse, INDEX = survey$Exer, FUN = mean, na.rm = T)
 
-
-
+.
 
 
 ```
