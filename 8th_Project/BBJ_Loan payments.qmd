@@ -23,8 +23,13 @@ editor: visual
 데이터 확인, factor로 변환
 
 ```{r}
+View(df)
+```
+
+```{r}
 df <- read.csv('Loan payments data.csv')
-df <- df[, -1] # Loan_ID 컬럼 삭제
+# df <- df[, -c(1, 6)] # Loan_ID 컬럼 삭제
+df <- df[, -c(1, 6)]
 df
 # str(df)
 
@@ -48,15 +53,83 @@ aggr(df, prop = FALSE, # 빈도수 또는 비율 출력, FALSE : 빈도
      numbers = TRUE, # plot에 정확한 count number 출력 여부
      sortVars = TRUE, # console window에 변수 별로 missing value count를 출력할지 안 할지
      sorCombs = TRUE) # 결합한 plot의 출력값에서 NA개수를 우선해서 출력
+
+# past_due_days 결측치 300개
+df$past_due_days <- mean(df$past_due_days, na.rm = T)
 ```
+
+대출상환 성공이냐, 실패냐? 이항 로지스틱 회귀분석
 
 ```{r}
 df$SoF <- factor(ifelse(
-  df$loan_status == "PAIDOFF", "SUCCESS", "FAILURE"))
-levels(df$SoF) # SUCCESS or FAILURE
+  df$loan_status == "PAIDOFF", "Success", "Failure"))
+levels(df$SoF) # SUCCESS or FAILURE, 실제값
 
 model <- glm(SoF ~ ., data = df,
              family = binomial(link = "logit"))
-summary(model)
 
+pred <- factor(ifelse(
+  model$fitted.values > 0.5, "pred-Success", "pred-Failure")) # 예측값
+
+tab <- table(df$SoF, pred)
+tab
+
+TP <- tab[2, 2] # True, Positive
+TN <- tab[1, 1]
+FP <- tab[2, 1]
+FN <- tab[1, 2] # False, Negative
+
+# 분류 모델의 성능 평가 지표: Evaluation Metric
+accuracy <- (TP + TN) / (TP + TN + FP + FN) # 정확도
+accuracy
+
+precision <- TP / (TP + FP) # 정밀도
+precision
+
+recall <- TP / (TP + FN) # 재현율
+recall
+
+library(pROC)
+roc(SoF ~ model$fitted.values, data = df,
+    plot = TRUE, main = "ROC CURVE", col = 'pink')
+
+# 전체를 training data로 잡아서 지나치게 깔끔함.
+```
+
+```{r}
+# 80 : 20 비율
+# 400개 : 100개
+test_index <- sample(1:500, 100, replace = F) # 1 ~ 500 중 100개, replace = F : 중복추출 X
+train <- df[-test_index,]
+test <- df[test_index,]
+
+model <- glm(SoF ~ ., data = train,
+             family = binomial(link = "logit"))
+
+pred <- factor(ifelse(
+  predict(model, test[,-dim(test)[2]], type = 'response')> 0.5, "pred-Success",
+  "pred-Failure")) # 예측값
+# response를 반환값으로 받음.
+
+tab <- table(test$SoF, pred)
+tab
+
+TP <- tab[2, 2] # True, Positive
+TN <- tab[1, 1]
+FP <- tab[2, 1]
+FN <- tab[1, 2] # False, Negative
+
+# 분류 모델의 성능 평가 지표: Evaluation Metric
+accuracy <- (TP + TN) / (TP + TN + FP + FN) # 정확도
+accuracy
+
+precision <- TP / (TP + FP) # 정밀도
+precision
+
+recall <- TP / (TP + FN) # 재현율
+recall
+
+library(pROC)
+roc(test$SoF ~ predict(model, test[,-c('SoF')], type = 'response'),
+    plot = TRUE, main = "ROC CURVE", col = 'pink')
 ```
