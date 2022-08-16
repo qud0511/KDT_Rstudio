@@ -99,7 +99,23 @@ tot <- prior * cond ;tot # 불량이 각 라인에서 발생할 확률
 sum(tot)
 ```
 
+# • 반복측정 분산분석을 위한 포뮬러 형식:
+- 반복측정 일원 분산분석: y ~ W + Error(Subject/W)
+- 반복측정 이원 분산분석: y ~ B * W + Error(Subject/W)
+    - W: 집단 내 요인, B: 집단 간 요인
+    - Subject: 각 측정 대상에 대한 식별자 변수
 
+```{r}
+# install.packages('HH')
+library(HH)
+
+# install.packages('faraway')
+library(faraway)
+str(sexab)
+
+ancova(ptsd ~ cpa + csa, data = sexab)
+
+```
 
 
 
