@@ -1,0 +1,22 @@
+---
+title: "소개합니다"
+format: html
+editor: visual
+---
+
+자랑스러운 우리 팀 멤버들 :
+
+-   조장 : 정한수
+-   지나가는 조원 1 : 남재환
+-   지나가는 조원 1 : 신민수
+-   지나가는 조원 1 : 임재원
+-   지나가는 조원 1 : 손병립\
+-   지나가는 조원 1 : 박병준
+
+\\경로\\ =\> quarto create-project qud0511 --type website
+
+=\> yml 파일 생성, 웹사이트 테마 등 변경
+
+www.quartopub.com
+
+\\경로\\ =\> quarto publish quarto-pub
