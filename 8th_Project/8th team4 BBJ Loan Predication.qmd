@@ -1,0 +1,12 @@
+---
+title: "8th team4-BBJ Loan Predication"
+format: html
+editor: visual
+---
+
+## 
+
+```{r}
+df <- read.csv('BBJ Loan Predication.csv')
+df
+```
