@@ -20,33 +20,43 @@ editor: visual
 | **education**      | 고객의 교육 수준                                 |
 | **Gender**         | 고객의 성별                                      |
 
-데이터 확인
+데이터 확인, factor로 변환
 
 ```{r}
 df <- read.csv('Loan payments data.csv')
 df <- df[, -1] # Loan_ID 컬럼 삭제
+df
+# str(df)
 
-summary(df)
-str(df)
-```
+cat("\n")
 
-범주형 데이터로 변환
-
-```{r}
 df$loan_status <- factor(df$loan_status)
 df$effective_date <- factor(df$effective_date)
 df$due_date <- factor(df$due_date)
 df$paid_off_time <- factor(df$paid_off_time)
 df$education <- factor(df$education)
 df$Gender <- factor(df$Gender)
-
 str(df)
 ```
 
-결측치 제거
+결측치 확인
 
 ```{r}
 library(VIM)
-aggr(df, prop = FALSE, # 빈도수 또는 비율 출력, FALSE ->
-     combined = TRUE, numbers = TRUE, sortVars = TRUE, sorCombs = TRUE)
+aggr(df, prop = FALSE, # 빈도수 또는 비율 출력, FALSE : 빈도
+     combined = TRUE, # missing value 있는 plot과 없는 plot 2개를 하나로 결합할지 안 할지
+     numbers = TRUE, # plot에 정확한 count number 출력 여부
+     sortVars = TRUE, # console window에 변수 별로 missing value count를 출력할지 안 할지
+     sorCombs = TRUE) # 결합한 plot의 출력값에서 NA개수를 우선해서 출력
+```
+
+```{r}
+df$SoF <- factor(ifelse(
+  df$loan_status == "PAIDOFF", "SUCCESS", "FAILURE"))
+levels(df$SoF) # SUCCESS or FAILURE
+
+model <- glm(SoF ~ ., data = df,
+             family = binomial(link = "logit"))
+summary(model)
+
 ```
