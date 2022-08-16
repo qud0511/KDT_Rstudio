@@ -9,6 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## ▪ 혼동 행렬: Confusion Matrix
+  • 이진 분류기의 분류 결과를 2 × 2 행렬로 표시한 행렬
+  • 이진 분류기가 분류(예측)할 때, 얼마나 많이 헷갈렸는가를 나타냄
 
 ```{r}
 # 팔머스펭귄데이터로 결측치 제거
@@ -39,32 +42,36 @@ table(pg$is.adelie, pg$pred)
 ```
 
 ```{r}
-# 버지니카인가, 아닌가?
+# 버지니카인가, 아닌가? 이항 로지스틱 회귀분석
 
 df <- iris
 df$Species <- factor(ifelse(
-  df$Species == "virginica", "Yes", "No"))
+  df$Species == "virginica", "Yes", "No")) # 실제값
 
 model <- glm(Species ~ ., data = df,
              family = binomial(link = "logit"))
 summary(model)
 
 df$pred <- factor(ifelse(
-  model$fitted.values > 0.5, "Yes", "No"))
+  model$fitted.values > 0.5, "Yes", "No")) # 예측값
 
 tab <- table(df$Species, df$pred)
+tab
 
-TP <- tab[2, 2] # True, Postive
+TP <- tab[2, 2] # True, Positive
 TN <- tab[1, 1]
 FP <- tab[2, 1]
-FN <- tab[1, 2] # False, Negatvie
+FN <- tab[1, 2] # False, Negative
 
-accuracy <- (TP + TN) / (TP + TN + FP + FN)
+# 분류 모델의 성능 평가 지표: Evaluation Metric
+accuracy <- (TP + TN) / (TP + TN + FP + FN) # 정확도
 accuracy
-# precision <- 
 
-# recall <- 
-# F1.score <- 
+precision <- TP / (TP + FP) # 정밀도
+
+recall <- TP / (TP + FN) # 재현율
+
+F1.score <- (2 X precision) / (precision + recall)# 정밀도와 재현율의 조화평균
 
 # install.packages("pROC")
 library(pROC)
