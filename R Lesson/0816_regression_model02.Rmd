@@ -115,6 +115,8 @@ str(sexab)
 
 ancova(ptsd ~ cpa + csa, data = sexab)
 
+
+
 ```
 
 
