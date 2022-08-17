@@ -108,7 +108,9 @@ legend('bottom', legend = c("Success", "Failure"), fill = rainbow(2))
 par(mfrow = c(1, 1))
 ```
 
-### 로지스틱 이항분석 : 대출상환 성공인가, 실패인가?
+
+
+## 로지스틱 이항분석 : 대출상환 성공인가, 실패인가?
 
 =\> 전체를 training data로 잡았을 때
 
@@ -143,13 +145,14 @@ roc(status ~ model$fitted.values, data = loan.df,
     plot = TRUE, main = "ROC CURVE", col = 'pink')
 ```
 
+
 ### Trainging Test 분할 : 객관적인 평가를 위해
 
 ```{r}
 # 80 : 20 비율 -> 400개 : 100개
 # "loan_status", "Principal", "terms", "effective_date", "due_date", "age", "education", "Gender"
 
-set.seed(1)
+set.seed(7)
 test_index <- sample(1:500, 100, replace = F) # 1 ~ 500 중 100개, replace = F : 중복추출 X
 train <- loan.df[-test_index,]
 test <- loan.df[test_index,]
@@ -160,7 +163,7 @@ str(test)
 model <- glm(loan_status ~ ., data = train,
              family = binomial(link = "logit"))
 
-test[,-dim(test)[2]]
+# test[, -dim(test)[1]] : loan_status 뺀 것
 
 pred <- factor(ifelse(
   predict(model, test[,-dim(test)[1]], type = 'response') > 0.5, "pred-Success",
@@ -186,12 +189,16 @@ recall <- TP / (TP + FN) # 재현율
 recall
 
 library(pROC)
-roc(test$loan_status ~ predict(model, test[,-dim(test)[1]], type = 'response'),
-    plot = TRUE, main = "ROC CURVE", col = 'pink') 
+roc(test$loan_status ~ predict(model, test[, -dim(test)[1]], type = 'response'),
+    plot = TRUE, main = "ROC CURVE", col = 'pink', print.auc = T) 
 ```
 
 ### 유의수준 확인
 
 ```{r}
+summary(model)
+# 대출상환 성패는 effective_date와 due_date에 가장 큰 영향을 받는다.
 
+# odds 비율
+# 일어날 확률(p) / 일어나지 않을 확률(1-p)
 ```
