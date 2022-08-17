@@ -114,7 +114,7 @@ par(mfrow = c(1, 1))
 
 ```{r}
 status <- loan.df$loan_status
-model <- glm(status ~ ., data = loan.df,
+model <- glm(status ~ ., data = loan.df, # glm() 일반화된 회귀분석
              family = binomial(link = "logit"))
 
 pred <- factor(ifelse(
@@ -158,7 +158,7 @@ str(train)
 str(test)
 
 model <- glm(loan_status ~ ., data = train,
-             family = binomial(link = "logit"))
+             family = binomial(link = "logit")) # 로지스틱 모형
 
 # test[, -dim(test)[1]] : loan_status 뺀 것
 
@@ -175,10 +175,12 @@ roc(test$loan_status ~ predict(model, test[, -dim(test)[1]], type = 'response'),
 ```{r}
 summary(model)
 
+cat("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
 # 오즈비 (odds ratio)
 # 일어날 확률(p) / 일어나지 않을 확률(1-p)
-
-```
+exp(coef(model)) # 한 단위가 증가했을 때 1보다 크면 오즈가 증가 => 성공확률이 높아짐.
+``` 
 
 ### 혼동행렬
 
@@ -190,16 +192,18 @@ tab
 TP <- tab[2, 2] # True, Positive
 TN <- tab[1, 1]
 FP <- tab[2, 1]
+
+
 FN <- tab[1, 2] # False, Negative
 
 # 분류 모델의 성능 평가 지표: Evaluation Metric
 accuracy <- (TP + TN) / (TP + TN + FP + FN) # 정확도
-accuracy
+accuracy # 정확도 : 현실에 부합할 확률
 
-precision <- TP / (TP + FP) # 정밀도
+precision <- TP / (TP + FP) # 정밀도 : 예측 결과가 긍정적일 때 현실도 실제로 긍정일 확률
 precision
 
-recall <- TP / (TP + FN) # 재현율
+recall <- TP / (TP + FN) # 재현율(민감도) : 현실이 긍정일때 예측결과도 긍정적일 확률
 recall
 ```
 
