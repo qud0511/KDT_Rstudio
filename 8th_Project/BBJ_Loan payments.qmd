@@ -18,7 +18,7 @@ editor: visual
 | **education**      | 고객의 교육 수준                                 |
 | **Gender**         | 고객의 성별                                      |
 
-데이터 전처리
+### 데이터 전처리
 
 ```{r}
 library(dplyr)  # Used for almost all data handling 
@@ -56,7 +56,7 @@ str(loan.df)
 
 ```
 
-EDA
+### EDA
 
 ```{r}
 # 수치형 자료 산점도, boxplot
@@ -76,25 +76,39 @@ boxplot(loan.df$terms, col = 'yellow', main = '기간')
 par(mfrow = c(1, 1))
 
 
-par(mfrow = c(3, 3))
+par(mfrow = c(2, 2))
 # 대출상환 상태
-tab.status <- table(loan.df$loan_status)
-barplot(tab.status, col = rainbow(3), 
+barplot(table(loan.df$loan_status), col = rainbow(2), 
         main = '대출상환 상태')
-tab.Gender <- table(loan.df$Gender)
-
 # 성별
-barplot(tab.Gender, col = rainbow(2), 
+barplot(table(loan.df$Gender), col = c(3, 4), 
         main = '성별')
-
 # 최종 학력
-tab.edu <- table(loan.df$education)
-barplot(tab.edu, col = rainbow(4), beside = T, 
+barplot(table(loan.df$education), col = c(3:6), beside = T, 
         main = '최종 학력')
+par(mfrow = c(1, 1))
+
+
+par(mfrow = c(2, 2))
+# 대출금 별 대출상환 여부는 어떠한가?
+with(loan.df, barplot(table(loan_status, Principal), 
+        col=rainbow(2), beside = T, 
+        main = '대출금 별 대출상환 여부'
+        , xlab = 'Principal', ylab = 'count'))
+legend('topleft', legend = c("Success", "Failure"), 
+       fill = rainbow(2))
+
+# 최종학력별 대출상환 여부는 어떠한가?
+with(loan.df, barplot(table(loan_status, Gender), col = rainbow(2), beside = T, main = '대출상환별 성 비율'))
+legend('topleft', legend = c("Success", "Failure"), fill = rainbow(2))
+
+# 최종학력별 대출상환 여부는 어떠한가?
+with(loan.df, barplot(table(loan_status, education), col = rainbow(2), beside = T, main = '최종학력별 대출상환 여부'))
+legend('bottom', legend = c("Success", "Failure"), fill = rainbow(2))
 par(mfrow = c(1, 1))
 ```
 
-로지스틱 이항분석 : 대출상환 성공인가, 실패인가?
+### 로지스틱 이항분석 : 대출상환 성공인가, 실패인가?
 
 =\> 전체를 training data로 잡았을 때
 
@@ -129,7 +143,7 @@ roc(status ~ model$fitted.values, data = loan.df,
     plot = TRUE, main = "ROC CURVE", col = 'pink')
 ```
 
-Trainging Test 분할 : 객관적인 평가를 위해
+### Trainging Test 분할 : 객관적인 평가를 위해
 
 ```{r}
 # 80 : 20 비율 -> 400개 : 100개
@@ -174,4 +188,10 @@ recall
 library(pROC)
 roc(test$loan_status ~ predict(model, test[,-dim(test)[1]], type = 'response'),
     plot = TRUE, main = "ROC CURVE", col = 'pink') 
+```
+
+### 유의수준 확인
+
+```{r}
+
 ```
