@@ -167,6 +167,23 @@ pred <- factor(ifelse(
   "pred-Failure")) # 예측값
 # response를 반환값으로 받음.
 
+library(pROC)
+roc(test$loan_status ~ predict(model, test[, -dim(test)[1]], type = 'response'),
+    plot = TRUE, main = "ROC CURVE", col = 'pink', print.auc = T) 
+```
+
+```{r}
+summary(model)
+
+# 오즈비 (odds ratio)
+# 일어날 확률(p) / 일어나지 않을 확률(1-p)
+
+```
+
+### 혼동행렬
+
+```{r}
+
 tab <- table(test$loan_status, pred)
 tab
 
@@ -184,22 +201,9 @@ precision
 
 recall <- TP / (TP + FN) # 재현율
 recall
-
-library(pROC)
-roc(test$loan_status ~ predict(model, test[, -dim(test)[1]], type = 'response'),
-    plot = TRUE, main = "ROC CURVE", col = 'pink', print.auc = T) 
 ```
 
-```{r}
-summary(model)
 
-# 오즈비 (odds ratio)
-# 일어날 확률(p) / 일어나지 않을 확률(1-p)
 
-```
 
-### 혼동행렬
 
-```{r}
-confus
-```
