@@ -199,11 +199,45 @@ ggplot(world, aes(long, lat, group = group)) +
   geom_polygon(fill = "lightyellow", color = "blue")
 ```
 
+```{r}
+# install.packages("ggrepel")
+str(mpg)
+sd(mpg[mpg$hwy > mean(mpg$hwy), c(1, 2, 9, 11)]$hwy)
+
+v <- c(10, 30, 50, 20, 40)
+sort(v)
+
+best.in.class <- mpg %>% # %>% 파이프라인 연산자
+  group_by(class) %>%
+  filter(row_number(desc(hwy)) == 1)
+
+p <- ggplot(data = mpg,
+            mapping = aes(x = displ, y = hwy))
+
+p + geom_point(aes(color = class)) +
+  
+  geom_smooth(se = T) +
+  
+  labs(title = "Fuel efficiency .vs. engine size",
+       x = "Engine displacement (L)", 
+       subtitle = "Two seaters are exceptional",
+       caption = "Data from fueleconomy.gov",
+       y = "Highway fuel economy (mpg)", color = "Car Type") + # 제목, 캡션, x축, y축, 범례 이름 변경
+  
+  geom_label(aes(label = model), # 요소에 라벨 달기
+               data = best.in.class, 
+               nudge_y = 2, alpha = 0.5) + # 라벨 이름 박스치기, 투명도
+  
+  theme(legend.position = "right") + # 범례 위치 바꾸기 
+    
+  theme_minimal() # ggplot 테마 변경
+```
+
 ### ggsave
 
-    ▪ ggsave(file="myplot.pdf")
+    ▪ ggsave(file="myplot.pdf") : pdf는 픽셀 안깨짐.
 
-    ▪ ggsave(file="myplot.png", width = 1920, height = 1080, units = "px")
+    ▪ ggsave("경로/파일명.jpg.png.pdf", width = 1920, height = 1080, units = "px")
 
 ▪ 데이터 분석과 시각화를 위한 도구:
 
@@ -217,3 +251,22 @@ ggplot(world, aes(long, lat, group = group)) +
 ### 한스 로슬링
 
 <https://www.gapminder.org/tools/#$chart-type=bubbles&url=v1>
+
+# *R Gallery Book*
+
+<https://www.r-graph-gallery.com/>
+
+<https://bookdown.org/content/b298e479-b1ab-49fa-b83d-a57c2b034d49/>
+
+```{r}
+library(palmerpenguins)
+pg <- penguins
+pg <- pg[complete.cases(pg), ]
+
+pg %>%
+  ggplot() +
+  geom_histogram() +
+  scale_fill_manual() +
+  theme_linedraw() +
+  labs(fill = "")
+```
