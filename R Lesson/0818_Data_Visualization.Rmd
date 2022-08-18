@@ -1,5 +1,5 @@
 ---
-title: "3-1장 데이터 시각화"
+title: "3-1, 3-2장 데이터 시각화"
 format: html
 editor: visual
 ---
@@ -93,14 +93,16 @@ str(dd)
 unique(dd$dataset)
 
 plot(y ~ x, data = dd, pch = 19, col = "tomato")
+
 plot(y ~ x, data = subset(dd, dataset == "dino"), 
      pch = 19, col = "tomato")
 
-ggplot(data = datasaurus_dozen,
-       mapping = aes(x = x, y = y)) +
-  geom_point()
+ggplot(data = subset(dd, dataset == "dino"),
+       mapping = aes(x = x, y = y)) + geom_point()
 
-
+ggplot(data = dd, mapping = aes(x = x, y = y)) +
+  geom_point(mapping = aes(color = dataset)) +
+  facet_wrap(~ dataset, nrow = 4)
 ```
 
 ▪ tidyverse와 ggplot2
@@ -164,6 +166,6 @@ p + geom_bar(mapping = aes(x = cut, fill = clarity),
 p <- ggplot(data = mpg, mapping = aes(x = class, y = hwy))
 p + geom_boxplot()
 
-
-
+p + geom_boxplot(fill = "lightyellow") +
+coord_flip()
 ```
