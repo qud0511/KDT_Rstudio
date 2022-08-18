@@ -31,15 +31,6 @@ editor: visual
 
       • 데이터 시각화는 기술적 통계로는 알 수 없는 정보를 볼 수 있다.
 
-▪ 데이터사우루스 : Datasaurus
-
-      • 기술적 통계를 믿지 말고, 데이터를 시각화해라! (by Alberto Cairo)
-
-▪ tidyverse와 ggplot2
-
-      • tidyverse: 해들리 위컴이 모아 놓은 데이터 과학을 위한 R 패키지들
-      • ggplot2: tidyverse의 세계에서 시각화를 담당하는 패키지
-
 ```{r}
 library(tidyverse)
 # str(diamonds)
@@ -88,6 +79,35 @@ par(mfrow = c(1,1))
 # ==> 시각화하면 전혀 다른 모습
 ```
 
+▪ 데이터사우루스 : Datasaurus
+
+      • 기술적 통계를 믿지 말고, 데이터를 시각화해라! (by Alberto Cairo)
+
+```{r}
+# install.packages("datasauRus")
+library(datasauRus)
+
+# data(package = "datasauRus")
+dd <- datasaurus_dozen
+str(dd)
+unique(dd$dataset)
+
+plot(y ~ x, data = dd, pch = 19, col = "tomato")
+plot(y ~ x, data = subset(dd, dataset == "dino"), 
+     pch = 19, col = "tomato")
+
+ggplot(data = datasaurus_dozen,
+       mapping = aes(x = x, y = y)) +
+  geom_point()
+
+
+```
+
+▪ tidyverse와 ggplot2
+
+      • tidyverse: 해들리 위컴이 모아 놓은 데이터 과학을 위한 R 패키지들
+      • ggplot2: tidyverse의 세계에서 시각화를 담당하는 패키지
+
 ### ggplot
 
 ```{r}
@@ -111,6 +131,9 @@ p + geom_point(color = 'tomato') + facet_grid(drv ~ cyl)
 
 ```{r}
 # smooth >> 추세선
+p <- ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point()
+
 p + geom_point(color = "blue") +
   geom_smooth(color = "cyan")
 
@@ -118,6 +141,8 @@ p + geom_point(mapping = aes(color = class)) +
   geom_smooth(color = "cyan")
 # => 시각화 자료를 보니 다항회귀가 유리해보임.
 ```
+
+### geom_bar()
 
 ```{r}
 p <- ggplot(data = diamonds)
@@ -133,4 +158,12 @@ p + geom_bar(mapping = aes(x = cut, fill = clarity),
              position = "dodge")
 ```
 
-### 
+### geom_boxplot()
+
+```{r}
+p <- ggplot(data = mpg, mapping = aes(x = class, y = hwy))
+p + geom_boxplot()
+
+
+
+```
