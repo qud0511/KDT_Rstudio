@@ -34,3 +34,54 @@ editor: visual
 ▪ 데이터사우루스 : Datasaurus
 
       • 기술적 통계를 믿지 말고, 데이터를 시각화해라! (by Alberto Cairo)
+
+▪ tidyverse와 ggplot2
+
+      • tidyverse: 해들리 위컴이 모아 놓은 데이터 과학을 위한 R 패키지들
+      • ggplot2: tidyverse의 세계에서 시각화를 담당하는 패키지
+
+```{r}
+library(tidyverse)
+# str(diamonds)
+# str(mpg)
+
+anscombe
+ans <- anscombe
+mean(ans$x1)
+mean(ans$x2)
+mean(ans$x3)
+mean(ans$x4)
+
+mean(ans$y1)
+mean(ans$y2)
+mean(ans$y3)
+mean(ans$y4)
+
+# 상관계수
+cor(ans$x1, ans$y1)
+cor(ans$x2, ans$y2)
+cor(ans$x3, ans$y3)
+cor(ans$x4, ans$y4)
+
+# 선형회귀
+lm(y1 ~ x1, data = ans)
+lm(y2 ~ x2, data = ans)
+lm(y3 ~ x3, data = ans)
+lm(y4 ~ x4, data = ans)
+# ==> 기술적 통계로 보면 전부 비슷한 수치
+
+# 시각화
+par(mfrow = c(2,2))
+plot(ans$x1, ans$y1, col = 'orange', pch = 19)
+abline(lm(y1 ~ x1, data = ans), col = "tomato")
+
+plot(ans$x2, ans$y2, col = 'orange', pch = 19)
+abline(lm(y2 ~ x2, data = ans), col = "tomato")
+
+plot(ans$x3, ans$y3, col = 'orange', pch = 19)
+abline(lm(y3 ~ x3, data = ans), col = "tomato")
+
+plot(ans$x4, ans$y4, col = 'orange', pch = 19)
+abline(lm(y4 ~ x4, data = ans), col = "tomato")
+par(mfrow = c(1,1))
+```
