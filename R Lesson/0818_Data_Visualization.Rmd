@@ -169,3 +169,34 @@ p + geom_boxplot()
 p + geom_boxplot(fill = "lightyellow") +
 coord_flip()
 ```
+
+### coord_polar() : piechart
+
+```{r}
+p <- ggplot(data = diamonds, mapping = aes(x = cut, fill = cut))
+p + geom_bar(show.legend = F, width = 1)
+
+p + geom_bar(show.legend = F, width = 1) +
+  labs(x = NULL, Y = NULL) +
+  theme(aspect.ratio = 1) +
+  coord_polar()
+```
+
+### geom_polygon()
+
+```{r}
+world <- map_data("world")
+world
+
+ggplot(world, aes(long, lat, group = group)) +
+  geom_polygon(fill = "lightyellow", color = "blue")
+```
+
+▪ 데이터 분석과 시각화를 위한 도구:
+
+    • 프로그래밍 언어에 기반한 도구
+        - R: ggplot, Python: matplotlib, JavaScript: D3.js, etc.
+    • 비즈니스 인텔리전스 도구
+        - Tableau, Microsoft Power BI, etc.
+
+▪
