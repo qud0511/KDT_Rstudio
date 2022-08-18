@@ -98,5 +98,18 @@ p
 # 버블 차트, 색생과 크기, 모양, 투명도로 정보의 차이 시각화
 p + geom_point(mapping = aes(color = class, size = class, shape = class, alpha = 0.3))
 
-table(mpg$class)
+p + geom_point(mapping = aes(color = class)) + facet_wrap(~ class, nrow = 2)
+
+p + geom_point(color = 'tomato') + facet_grid(drv ~ cyl)
 ```
+
+### geom : geometric object
+
+```{r}
+p + geom_point(color = "blue") +
+  geom_smooth(color = "cyan")
+# => 시각화 자료를 보니 다항회귀가 유리해보임.
+
+```
+
+### 
