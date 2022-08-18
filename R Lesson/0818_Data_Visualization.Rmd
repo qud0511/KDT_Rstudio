@@ -108,8 +108,23 @@ p + geom_point(color = 'tomato') + facet_grid(drv ~ cyl)
 ```{r}
 p + geom_point(color = "blue") +
   geom_smooth(color = "cyan")
-# => 시각화 자료를 보니 다항회귀가 유리해보임.
 
+p + geom_point(mapping = aes(color = class)) +
+  geom_smooth(color = "cyan")
+# => 시각화 자료를 보니 다항회귀가 유리해보임.
+```
+
+```{r}
+p <- ggplot(data = diamonds)
+# diamonds의 cut : geom_point() 에러 발생
+p + geom_bar(mapping = aes(x = cut), fill = "steelblue")
+p + stat_count(mapping = aes(x = cut), fill = 'steelblue')
+
+p + geom_bar(mapping = aes(x = cut, fill = clarity))
+p + geom_bar(mapping = aes(x = cut, fill = clarity),
+             position = "fill")
+p + geom_bar(mapping = aes(x = cut, fill = clarity),
+             position = "dodge")
 ```
 
 ### 
