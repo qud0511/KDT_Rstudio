@@ -170,7 +170,7 @@ p + geom_boxplot(fill = "lightyellow") +
 coord_flip()
 ```
 
-### coord_polar() : piechart
+### coord_polar()
 
 ```{r}
 p <- ggplot(data = diamonds, mapping = aes(x = cut, fill = cut))
