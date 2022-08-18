@@ -126,7 +126,11 @@ p + geom_point(mapping = aes(color = class, size = class, shape = class, alpha =
 p + geom_point(mapping = aes(color = class)) + facet_wrap(~ class, nrow = 2)
 
 p + geom_point(color = 'tomato') + facet_grid(drv ~ cyl)
+
 # jitter 점이 겹쳐 있으면 흔들어서 볼 수 있게
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class), 
+             position = "jitter")
 ```
 
 ### geom : geometric object
@@ -163,18 +167,18 @@ p + geom_bar(mapping = aes(x = cut, fill = clarity),
 ### geom_boxplot()
 
 ```{r}
-p <- ggplot(data = mpg, mapping = aes(x = class, y = hwy))
+p <- ggplot(mpg, mapping = aes(x = class, y = hwy))
 p + geom_boxplot()
 
 p + geom_boxplot(fill = "lightyellow") +
-coord_flip()
+coord_flip() # Coordinates flip
 ```
 
 ### coord_polar()
 
 ```{r}
 p <- ggplot(data = diamonds, mapping = aes(x = cut, fill = cut))
-p + geom_bar(show.legend = F, width = 1)
+p + geom_bar(show.legend = F, width = 1) # width : 넓이
 
 p + geom_bar(show.legend = F, width = 1) +
   labs(x = NULL, Y = NULL) +
@@ -209,3 +213,7 @@ ggplot(world, aes(long, lat, group = group)) +
         - Tableau, Microsoft Power BI, etc.
 
 ▪ 구글 트렌드, 네이버 랩, 카카오 트렌드 등...
+
+### 한스 로슬링
+
+<https://www.gapminder.org/tools/#$chart-type=bubbles&url=v1>
