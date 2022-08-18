@@ -18,7 +18,7 @@ editor: visual
 | **education**      | 고객의 교육 수준                                 |
 | **Gender**         | 고객의 성별                                      |
 
-### 데이터 전처리
+###데이터 전처리
 
 ```{r}
 library(dplyr)  # Used for almost all data handling 
@@ -78,43 +78,40 @@ par(mfrow = c(1, 1))
 
 par(mfrow = c(2, 2))
 # 대출상환 상태
-barplot(table(loan.df$loan_status), col = rainbow(2), 
+barplot(table(loan.df$loan_status), col = rainbow(3), 
         main = '대출상환 상태')
 # 성별
-barplot(table(loan.df$Gender), col = c(3, 4), 
+barplot(table(loan.df$Gender), col = rainbow(2), 
         main = '성별')
 # 최종 학력
-barplot(table(loan.df$education), col = c(3:6), beside = T, 
+barplot(table(loan.df$education), col = rainbow(4), beside = T, 
         main = '최종 학력')
 par(mfrow = c(1, 1))
 
 
 par(mfrow = c(2, 2))
-# 대출금 별 대출상환 여부는 어떠한가?
+# 대출상환 상태에 따른 대출금은 얼마인가?
 with(loan.df, barplot(table(loan_status, Principal), 
         col=rainbow(2), beside = T, 
-        main = '대출금 별 대출상환 여부'
+        main = '대출상환 상태에 따른 대출금'
         , xlab = 'Principal', ylab = 'count'))
 legend('topleft', legend = c("Success", "Failure"), 
        fill = rainbow(2))
 
-# 최종학력별 대출상환 여부는 어떠한가?
-with(loan.df, barplot(table(loan_status, Gender), col = rainbow(2), beside = T, main = '대출상환별 성 비율'))
-legend('topleft', legend = c("Success", "Failure"), fill = rainbow(2))
+# 성별에 따른 대출상환 상태는 어떠한가?
+with(loan.df, barplot(table(Gender, loan_status), col = rainbow(2), beside = T, main = '성별에 따른 대출상환 상태'))
+legend('topleft', legend = c('female','male'), fill = rainbow(2))
 
-# 최종학력별 대출상환 여부는 어떠한가?
-with(loan.df, barplot(table(loan_status, education), col = rainbow(2), beside = T, main = '최종학력별 대출상환 여부'))
-legend('bottom', legend = c("Success", "Failure"), fill = rainbow(2))
 par(mfrow = c(1, 1))
 ```
 
-## 로지스틱 이항분석 : 대출상환 성공인가, 실패인가?
+### 로지스틱 이항분석 : 대출상환 성공인가, 실패인가?
 
 =\> 전체를 training data로 잡았을 때
 
 ```{r}
 status <- loan.df$loan_status
-model <- glm(status ~ ., data = loan.df, # glm() 일반화된 회귀분석
+model <- glm(status ~ ., data = loan.df,
              family = binomial(link = "logit"))
 
 pred <- factor(ifelse(
@@ -149,7 +146,7 @@ roc(status ~ model$fitted.values, data = loan.df,
 # 80 : 20 비율 -> 400개 : 100개
 # "loan_status", "Principal", "terms", "effective_date", "due_date", "age", "education", "Gender"
 
-set.seed(7)
+set.seed(1)
 test_index <- sample(1:500, 100, replace = F) # 1 ~ 500 중 100개, replace = F : 중복추출 X
 train <- loan.df[-test_index,]
 test <- loan.df[test_index,]
@@ -158,33 +155,14 @@ str(train)
 str(test)
 
 model <- glm(loan_status ~ ., data = train,
-             family = binomial(link = "logit")) # 로지스틱 모형
+             family = binomial(link = "logit"))
 
-# test[, -dim(test)[1]] : loan_status 뺀 것
+test[,-dim(test)[2]]
 
 pred <- factor(ifelse(
   predict(model, test[,-dim(test)[1]], type = 'response') > 0.5, "pred-Success",
   "pred-Failure")) # 예측값
 # response를 반환값으로 받음.
-
-library(pROC)
-roc(test$loan_status ~ predict(model, test[, -dim(test)[1]], type = 'response'),
-    plot = TRUE, main = "ROC CURVE", col = 'pink', print.auc = T) 
-```
-
-```{r}
-summary(model)
-
-cat("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
-# 오즈비 (odds ratio)
-# 일어날 확률(p) / 일어나지 않을 확률(1-p)
-exp(coef(model)) # 한 단위가 증가했을 때 1보다 크면 오즈가 증가 => 성공확률이 높아짐.
-``` 
-
-### 혼동행렬
-
-```{r}
 
 tab <- table(test$loan_status, pred)
 tab
@@ -192,22 +170,19 @@ tab
 TP <- tab[2, 2] # True, Positive
 TN <- tab[1, 1]
 FP <- tab[2, 1]
-
-
 FN <- tab[1, 2] # False, Negative
 
 # 분류 모델의 성능 평가 지표: Evaluation Metric
 accuracy <- (TP + TN) / (TP + TN + FP + FN) # 정확도
-accuracy # 정확도 : 현실에 부합할 확률
+accuracy
 
-precision <- TP / (TP + FP) # 정밀도 : 예측 결과가 긍정적일 때 현실도 실제로 긍정일 확률
+precision <- TP / (TP + FP) # 정밀도
 precision
 
-recall <- TP / (TP + FN) # 재현율(민감도) : 현실이 긍정일때 예측결과도 긍정적일 확률
+recall <- TP / (TP + FN) # 재현율
 recall
+
+library(pROC)
+roc(test$loan_status ~ predict(model, test[,-dim(test)[1]], type = 'response'),
+    plot = TRUE, main = "ROC CURVE", col = 'pink') 
 ```
-
-
-
-
-
