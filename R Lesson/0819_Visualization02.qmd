@@ -1,0 +1,179 @@
+---
+title: "데이터 시각화"
+format: html
+editor: visual
+---
+
+```{r}
+# 출처: https://r-graph-gallery.com/histogram_several_group.html
+library(ggplot2)
+library(dplyr)
+# install.packages("hrbrthemes")
+library(hrbrthemes)
+
+data <- data.frame(
+  type = c( rep("variable 1", 1000), rep("variable 2", 1000) ),
+  value = c( rnorm(1000), rnorm(1000, mean=4) )
+)
+
+p<-data%>%ggplot(aes(x=value, fill=type))+geom_histogram( color="#e9ecef", alpha=0.6, position = 'identity') +scale_fill_manual(values=c("#69b3a2", "#404080")) + theme_ipsum() + labs(fill="")
+
+p
+
+# 펭귄데이터셋
+## 성별에 따른 히스토그램을 겹쳐서 그리기
+library(palmerpenguins)
+pg<-penguins
+pg<-pg[complete.cases(pg),]
+str(pg)
+table(pg$sex)
+pg%>%ggplot(aes(bill_length_mm,fill=sex))+geom_histogram(alpha=0.3,position='identity',bins=50)+scale_fill_manual(values=c('red','blue'))+theme_ipsum()+labs(fill='')
+?geom_histogram
+
+colSums(is.na(pg))
+
+# esquisse한 코드 만들기
+## 코드 1
+library(esquisse)
+comment('Tools->Addins->Browse Addins')
+
+library(dplyr)
+library(ggplot2)
+
+gapminder::gapminder %>%
+ filter(year >= 2007L & year <= 2007L) %>%
+ ggplot() +
+ aes(x = gdpPercap, y = lifeExp, colour = continent, size = pop, group = gdpPercap) +
+ geom_point(shape = "square open") +
+ scale_color_hue(direction = 1) +
+ labs(x = "소득", y = "기대수명", 
+ title = "Esquisse plot", subtitle = "good", caption = "gyc") +
+ theme_dark() +
+ facet_wrap(vars(year))
+
+## 코드2
+library(dplyr)
+library(ggplot2)
+
+gapminder::gapminder %>%
+ filter(year >= 1997L & year <= 2007L) %>%
+ ggplot() +
+ aes(x = gdpPercap, y = lifeExp, colour = continent, size = pop, group = gdpPercap) +
+ geom_point(shape = "bullet") +
+ scale_color_hue(direction = 1) +
+ labs(x = "소득", y = "기대수명", 
+ title = "1997~2007", subtitle = "plot", caption = "cgy") +
+ theme_classic() +
+ facet_wrap(vars(year))
+
+library(shiny)
+ui <- fluidPage(
+  
+  # Application title
+  titlePanel("Old Faithful Geyser Data"),
+  
+  # Sidebar with a slider input for number of bins 
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("bins",
+                  "Number of bins:",
+                  min = 1,
+                  max = 50,
+                  value = 30)
+    ),
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+      plotOutput("distPlot")
+    )
+  )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+  
+  output$distPlot <- renderPlot({
+    # generate bins based on input$bins from ui.R
+    x    <- faithful[, 2]
+    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+    
+    # draw the histogram with the specified number of bins
+    hist(x, breaks = bins, col = 'darkgray', border = 'white',
+         xlab = 'Waiting time to next eruption (in mins)',
+         main = 'Histogram of waiting times')
+  })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+```{r}
+# 라이브러리 로딩
+library(shiny)
+
+ui <- fluidPage(
+  tags$h1('Hello Shiny!'),
+  selectInput('dataset',
+              label = 'Dataset',
+              choices = ls('package:datasets')),
+  verbatimTextOutput('summary'),
+  tableOutput('table')
+)
+
+server <- function(input, output){
+  dataset <- reactive({
+    get(input$dataset, 'package:datasets')
+  })
+  output$summary <- renderPrint({
+    cat(input$dataset)
+    summary(dataset())
+  })
+  output$table <- renderTable({
+    head(dataset(), 10)
+  })
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+```{r}
+library(shiny)
+library(gapminder)
+library(ggplot2)
+
+ui <- fluidPage(
+  tags$h1("갭마인더 따라해보기 : ")
+  
+  
+)
+
+sever <- function(input, output){
+  
+  output$plot <- renderPlot({
+    ggplot(subset(gapminder, year == 2007),
+           aes(x = gdpPercap, y = lifeExp)) +
+      geom_point(aes(color = cotinent)) +
+      scale_x_log10() +
+      geom_smooth()
+  })
+  
+  output$data <- renderTable({
+    req(input$plot_click)
+    nearPoints(gapminder, input$plot_click)
+  })
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+### shinyapps.io
+
+[shinyapps.io](https://www.shinyapps.io/admin/#/dashboard)
+
+```{r}
+# install.packages('rsconnect')
+
+rsconnect::setAccountInfo(name='qud0511', token='62F5A3834423265D7BAA6B4213123D6A', secret='NvIw88zxXdwm8YwfMEr01vO+T4fSIAuRZSRXYZGH')
+
+```
