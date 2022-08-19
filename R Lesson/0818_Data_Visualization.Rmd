@@ -262,11 +262,31 @@ p + geom_point(aes(color = class)) +
 library(palmerpenguins)
 pg <- penguins
 pg <- pg[complete.cases(pg), ]
+pg
 
 pg %>%
-  ggplot() +
-  geom_histogram() +
-  scale_fill_manual() +
+  ggplot(aes(x = body_mass_g, fill = sex)) +
+  geom_histogram(color = "e9ecf", alpha = 0.6, position = "identity") + 
+  scale_fill_manual(values = c(#69)) + # 
   theme_linedraw() +
   labs(fill = "")
+```
+
+```{r}
+# install.packages('esquisse')
+
+# install.packages("gapminder")
+library(gapminder)
+str(gapminder)
+
+ggplot(gapminder, 
+aes(gdpPercap, lifeExp, color = continent)) +
+geom_point(alpha = 0.5) +
+scale_x_log10(labels = scales::dollar) +
+labs(title = "GapMinder: GDP .vs. Life Expectancy",
+x = "GDP per capita", y = "Life Expectancy") +
+theme(plot.title = element_text(size=18,
+face="bold",
+color="steelblue"))
+
 ```
