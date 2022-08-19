@@ -1,4 +1,5 @@
 library(shiny)
+library(palmerpenguins)
 
 ui <- fluidPage()ui <- pageWithSidebar(
   headerPanel(h1("Miles Per Gallon")),
