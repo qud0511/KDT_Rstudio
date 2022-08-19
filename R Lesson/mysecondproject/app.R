@@ -1,14 +1,27 @@
 library(shiny)
 library(palmerpenguins)
 
-ui <- fluidPage()ui <- pageWithSidebar(
-  headerPanel(h1("Miles Per Gallon")),
+library(shiny)
+library(palmerpenguins)
+
+pg <- penguins
+pg <- pg[complete.cases(pg),]
+
+ui <- pageWithSidebar(
+  headerPanel(h1("팔머펭귄 데이터셋")),
   sidebarPanel(
-    selectInput("variable", 
-                "선택해봐바",
-                list("Cylinders" = "cyl",
-                     "Transmission" = "am",
-                     "Gears" = "gear")),
+    selectInput("indvar", 
+                "독립변수는",
+                list("종류별" = "species",
+                     "섬별" = "island",
+                     "성별" = "sex")),
+    selectInput("depvar", 
+                "종속 변수는",
+                list("부리 길이" = "bill_length_mm",
+                     "부리 깊이" = "bill_depth_mm",
+                     "날개 길이" = "flipper_length_mm",
+                     "체질량" = "body_mass_g")),
+    
     checkboxInput("outliers",
                   "이상치도 보여주까?",
                   FALSE)),
@@ -17,20 +30,22 @@ ui <- fluidPage()ui <- pageWithSidebar(
     h3(textOutput("caption")),
     plotOutput("mpgPlot"))
 )
-mpgData <- mtcars
-mpgData$am <- factor(mpgData$am, labels = c("Automatic", "Manual"))
+
 server <- function(input, output) {
   formulaText <- reactive({
-    paste("mpg~", input$variable)
+    paste(input$depvar,"~", input$indvar)
   })
   output$caption <- renderText({
     formulaText()
   })
   output$mpgPlot <- renderPlot({
     boxplot(as.formula(formulaText()),
-            data <- mpgData,
+            data <- pg,
             outline = input$outliers,
             col = "lightyellow")
   })
 }
-shinyApp(ui, server)
+
+
+# web server를 구동 시켜줌
+shinyApp(ui = ui, server = server)
