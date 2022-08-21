@@ -101,8 +101,8 @@ plt
 # Add labels
 plt <- plt + 
   geom_shadowtext(
-    data = subset(data, count < 8),
-    aes(count, y = name, label = name),
+    data = subset(df, length(team) < 8),
+    aes(count, y = team, label = team),
     hjust = 0,
     nudge_x = 0.3,
     colour = BLUE,
@@ -112,12 +112,17 @@ plt <- plt +
     size = 7
   ) + 
   geom_text(
-    data = subset(data, count >= 8),
-    aes(0, y = name, label = name),
+    data = subset(df, length(team) >= 8),
+    aes(0, y = team, label = team),
     hjust = 0,
     nudge_x = 0.3,
     colour = "white",
     family = "Econ Sans Cnd",
     size = 7
   )
+plt
+
+unique(length(df$team)) # 각 팀별 글자수?
 ```
+
+"LG Twins", "KT Wiz", "Doosan Bears", "Samsung Lions", "NC Dinos", "Kiwoom Heroes", "SSG Landers", "Hanwha Eagles", "Kia Tigers", "Lotte Giants", "SK Wyverns", "Nexen Heroes", "Woori Heroes", "Hyundai Unicorns", "Haitai Tigers", "Ssangbangwool Raiders", "OB Bears", "Pacific Dolphins", "Binggre Eagles", "MBC Blue Dragons", "Chungbo Pintos", "Sammi Superstars"
