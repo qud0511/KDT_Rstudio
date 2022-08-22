@@ -72,14 +72,45 @@ p <- df_01 |>
 p
 ```
 
+```{r}
+library(plotly)
+
+fig <- df_01 %>%
+  plot_ly(
+    x = ~team,
+    y = ~average_age,
+    split = ~team,
+    type = 'violin',
+    box = list(
+      visible = T
+    ),
+    meanline = list(
+      visible = T
+    )
+  ) 
+
+fig <- fig %>%
+  layout(
+    xaxis = list(
+      title = "KBO TEAM"
+    ),
+    yaxis = list(
+      title = "AGE",
+      zeroline = F
+    )
+  )
+
+fig
+```
+
 ### 
 KBO 리그 승률, 승 : Stacked Funnel Plot
 
 <https://plotly.com/r/funnel-charts/>
 
 ```{r}
-library(showtext) # 다운로드 없이 구글 제공 폰트 사용
-font_add_google("Gochi Hand", "gochi")
+# library(showtext) # 다운로드 없이 구글 제공 폰트 사용
+# font_add_google("Gochi Hand", "gochi")
 
 # Need to install plotly from Github to get funnel plots
 # devtools::install_github("ropensci/plotly")
@@ -110,9 +141,4 @@ fig <- fig %>%
   layout(yaxis = list(categoryarray = c(1:6)))
 
 fig
-
-
-```
-
-```{}
 ```
