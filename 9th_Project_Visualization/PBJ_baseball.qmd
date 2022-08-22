@@ -4,21 +4,54 @@ format: html
 editor: visual
 ---
 
+| Col1                     | Col2                                      | Col3 |
+|------------------------|------------------------|------------------------|
+| runs_per_game            | 경기당 득점 수                            |      |
+| ERA (earned run average) | (투수의) 방어율, 평균자책점               |      |
+| intentional_walks        | 의도적인 볼넷                             |      |
+| complete_game            | 완투 경기(한 투수가 1회부터 9회까지 혼자) |      |
+| run_average_9            | ?                                         |      |
+| shutouts                 | 완승(0점)                                 |      |
+|                          |                                           |      |
+
 ```{r}
 df <- read.csv("kbopitchingdata.csv")
-View(df)
-str(df)
+# View(df)
+str()
+
+
+# 결측치가 있어서 필요 없는 컬럼 제거
+df_01 <- subset(df, select=-c(games_started,games_finished,intentional_walks, balks, wild_pitches))
+
+# 연도별 바뀐 팀들을 현대의 이름으로 재정렬
+for (i in (1:length(df_01$team))){
+  if(df_01$team[i] == 'MBC Blue Dragons'){
+    df_01$team[i] = 'LG Twins'
+  } else if(df_01$team[i] == 'OB Bears'){
+    df_01$team[i] = 'Doosan Bears'
+  } else if(df_01$team[i] == 'Nexen Heroes' | df_01$team[i] == 'Woori Heroes'){
+    df_01$team[i] = 'Kiwoom Heroes'
+  } else if(df_01$team[i] == 'SK Wyverns'){
+    df_01$team[i] = 'SSG Landers'
+  } else if(df_01$team[i] == 'Binggre Eagles'){
+    df_01$team[i] = 'Hanwha Eagles'
+  } else if(df_01$team[i] == 'Haitai Tigers'){
+    df_01$team[i] = 'Kia Tigers'
+  } else if(df_01$team[i] == 'Pacific Dolphins' | df_01$team[i] == 'Chungbo Pintos' | df_01$team[i] == 'Sammi Superstars'){
+    df_01$team[i] = 'Hyundai Unicorns'
+  }
+}
 
 library(ggplot2)
 library(plotly)
 ```
 
 ```{r}
-p <- ggplot(df, mapping = aes(average_age, team)) + geom_point()
+p <- ggplot(df_01, mapping = aes(average_age, team)) + geom_point()
 p
 ```
 
-## K - 리그 선수들의 나이 : Violin Graph(Horizontal)
+## KBO 리그 선수들의 나이 : Violin Graph(Horizontal)
 
 ```{r}
 # K-리그 선수들의 나이
@@ -33,7 +66,7 @@ library(hrbrthemes)
 library(viridis)
 
 # Plot
-p <- df %>%
+p <- df_01 %>%
   ggplot( aes(x=team, y=average_age, fill=team, color=team)) +
     geom_violin(width=1.6, size=0.5) +
     scale_fill_viridis(discrete=TRUE) +
@@ -48,7 +81,7 @@ p <- df %>%
 p
 ```
 
-### K - 리그 팀들의 승률
+### KBO 리그 팀들의 승률
 
 ```{r}
 # https://r-graph-gallery.com/web-horizontal-barplot-with-labels-the-economist.html
