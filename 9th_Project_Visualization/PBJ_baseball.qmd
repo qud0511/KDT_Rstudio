@@ -6,6 +6,11 @@ editor: visual
 
 ### 데이터 전처리
 
+```{r include=F}
+knitr::opts_chunk$set(warning = F)
+knitr::opts_chunk$set(message = F)
+```
+
 ```{r}
 df <- read.csv("kbopitchingdata.csv")
 # View(df)
@@ -46,12 +51,13 @@ library(tidyr)
 library(forcats)
 library(hrbrthemes)
 library(viridis)
-# library(showtext)
+
 # library(extrafont)
-# font_import(paths=NULL, recursive = TRUE, prompt=TRUE, pattern=NULL) # 윈도우즈 폰트데이터베이스에서 찾을 수 없는 폰트페밀리입니다 오류
+# font_import(paths=NULL, recursive = TRUE, prompt=TRUE, pattern=NULL) # "윈도우즈 폰트데이터베이스에서 찾을 수 없는 폰트페밀리입니다" 오류 해결, 30분 이상 소요
 
 # Plot
-p <- df_01 %>%
+
+p <- df_01 |>
   ggplot( aes(x=team, y=average_age, fill=team, color=team)) +
     geom_violin(width=1.6, size=0.5) +
     scale_fill_viridis(discrete=TRUE) +
@@ -72,16 +78,16 @@ KBO 리그 승률, 승 : Stacked Funnel Plot
 <https://plotly.com/r/funnel-charts/>
 
 ```{r}
-# https://plotly.com/r/funnel-charts/
+library(showtext) # 다운로드 없이 구글 제공 폰트 사용
+font_add_google("Gochi Hand", "gochi")
 
 # Need to install plotly from Github to get funnel plots
 # devtools::install_github("ropensci/plotly")
-library(plotly)
 
-df_2021 <- subset(df_01, year==2021)
-# sort(df_2021$wins)
+library(plotly)
+df_2021 <- subset(df_01, year==2021) # 2021년 데이터만 추출
 df_2021<-df_2021 |>
-  arrange(desc(wins))
+  arrange(desc(wins)) # wins 내림차순으로 정렬
 
 fig <- plot_ly(
     type = "funnel",
@@ -89,41 +95,24 @@ fig <- plot_ly(
     y = df_2021$team,
     x = df_2021$win_loss_percentage*100,
     textposition = "inside",
-    textinfo = "name+value+percent total")
+    textinfo = "value+percent total")
 
 fig <- fig %>%
   add_trace(
     type = "funnel",
     name = 'wins',
-    orientation = "h",
     y = df_2021$team,
     x = df_2021$wins,
     textposition = "inside",
-    textinfo = "name+value+percent total")
+    textinfo = "value+percent total")
 
 fig <- fig %>%
-layout(yaxis = list(categoryarray = df_2021$team))
+  layout(yaxis = list(categoryarray = c(1:6)))
 
 fig
+
+
 ```
 
-```{r}
-
-fig <- plot_ly(
-    type = "funnel",
-    name = 'win_loss_percentage',
-    y = df_01$team,
-    x = c(df_01$win_loss_percentage),
-    textinfo = "value+percent initial")
-
-
-
-fig <- fig %>%
-  layout(yaxis = list(categoryarray = c("Website visit", "Downloads", "Potential customers", "Requested price", "invoice sent", "Finalized")))
-```
-
-```{r}
-df_01<-subset(df_01, year==2021)
-
-add_tr
+```{}
 ```
