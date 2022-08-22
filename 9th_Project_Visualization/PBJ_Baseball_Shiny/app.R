@@ -1,8 +1,14 @@
+# Libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(forcats)
+library(hrbrthemes)
+library(viridis)
+library(shiny)
 
 df <- read.csv("kbopitchingdata.csv")
 # View(df)
-str()
-
 
 # 결측치가 있어서 필요 없는 컬럼 제거
 df_01 <- subset(df, select=-c(games_started,games_finished,intentional_walks, balks, wild_pitches))
@@ -28,14 +34,6 @@ for (i in (1:length(df_01$team))){
 
 # K-리그 선수들의 나이
 # https://r-graph-gallery.com/violin_horizontal_ggplot2.html
-
-# Libraries
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(forcats)
-library(hrbrthemes)
-library(viridis)
 
 # Plot
 p <- df_01 %>%

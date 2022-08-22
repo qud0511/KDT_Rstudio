@@ -4,21 +4,10 @@ format: html
 editor: visual
 ---
 
-| Col1                     | Col2                                      | Col3 |
-|------------------------|------------------------|------------------------|
-| runs_per_game            | 경기당 득점 수                            |      |
-| ERA (earned run average) | (투수의) 방어율, 평균자책점               |      |
-| intentional_walks        | 의도적인 볼넷                             |      |
-| complete_game            | 완투 경기(한 투수가 1회부터 9회까지 혼자) |      |
-| run_average_9            | ?                                         |      |
-| shutouts                 | 완승(0점)                                 |      |
-|                          |                                           |      |
-
 ```{r}
 df <- read.csv("kbopitchingdata.csv")
 # View(df)
-str()
-
+str(df)
 
 # 결측치가 있어서 필요 없는 컬럼 제거
 df_01 <- subset(df, select=-c(games_started,games_finished,intentional_walks, balks, wild_pitches))
@@ -41,14 +30,6 @@ for (i in (1:length(df_01$team))){
     df_01$team[i] = 'Hyundai Unicorns'
   }
 }
-
-library(ggplot2)
-library(plotly)
-```
-
-```{r}
-p <- ggplot(df_01, mapping = aes(average_age, team)) + geom_point()
-p
 ```
 
 ## KBO 리그 선수들의 나이 : Violin Graph(Horizontal)
@@ -64,6 +45,9 @@ library(tidyr)
 library(forcats)
 library(hrbrthemes)
 library(viridis)
+library(showtext)
+library(extrafont)
+font_import(paths=NULL, recursive = TRUE, prompt=TRUE, pattern=NULL) # 윈도우즈 폰트데이터베이스에서 찾을 수 없는 폰트페밀리입니다 오류
 
 # Plot
 p <- df_01 %>%
@@ -158,4 +142,41 @@ plt
 unique(length(df$team)) # 각 팀별 글자수?
 ```
 
-"LG Twins", "KT Wiz", "Doosan Bears", "Samsung Lions", "NC Dinos", "Kiwoom Heroes", "SSG Landers", "Hanwha Eagles", "Kia Tigers", "Lotte Giants", "SK Wyverns", "Nexen Heroes", "Woori Heroes", "Hyundai Unicorns", "Haitai Tigers", "Ssangbangwool Raiders", "OB Bears", "Pacific Dolphins", "Binggre Eagles", "MBC Blue Dragons", "Chungbo Pintos", "Sammi Superstars"
+### 
+
+Stacked Funnel Plot
+
+```{r}
+# Need to install plotly from Github to get funnel plots
+# devtools::install_github("ropensci/plotly")
+library(plotly)
+df$losses
+fig <- plot_ly(
+    type = "funnel",
+    name = 'win_loss_percentage',
+    y = c("Website visit", "Downloads", "Potential customers", "Requested price"),
+    x = c(120, 60, 30, 20),
+    textinfo = "value+percent initial") 
+fig <- fig %>%
+  add_trace(
+    type = "funnel",
+    name = 'wins',
+    orientation = "h",
+    y = c("Website visit", "Downloads", "Potential customers", "Requested price", "invoice sent"),
+    x = c(100, 60, 40, 30, 20),
+    textposition = "inside",
+    textinfo = "value+percent previous") 
+fig <- fig %>%
+  add_trace(
+    type = "funnel",
+    name = 'losses',
+    orientation = "h",
+    y = c("Website visit", "Downloads", "Potential customers", "Requested price", "invoice sent", "Finalized"),
+  x = c(90, 70, 50, 30, 10, 5),
+  textposition = "outside",
+  textinfo = "value+percent total") 
+fig <- fig %>%
+  layout(yaxis = list(categoryarray = c(df_01$team)))
+
+fig
+```
