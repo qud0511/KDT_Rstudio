@@ -4,6 +4,8 @@ format: html
 editor: visual
 ---
 
+### 데이터 전처리
+
 ```{r}
 df <- read.csv("kbopitchingdata.csv")
 # View(df)
@@ -32,12 +34,11 @@ for (i in (1:length(df_01$team))){
 }
 ```
 
-## KBO 리그 선수들의 나이 : Violin Graph(Horizontal)
+## KBO 리그 선수들의 나이 : Horizontal Violin Graph
+
+<https://r-graph-gallery.com/violin_horizontal_ggplot2.html>
 
 ```{r}
-# K-리그 선수들의 나이
-# https://r-graph-gallery.com/violin_horizontal_ggplot2.html
-
 # Libraries
 library(ggplot2)
 library(dplyr)
@@ -45,9 +46,9 @@ library(tidyr)
 library(forcats)
 library(hrbrthemes)
 library(viridis)
-library(showtext)
-library(extrafont)
-font_import(paths=NULL, recursive = TRUE, prompt=TRUE, pattern=NULL) # 윈도우즈 폰트데이터베이스에서 찾을 수 없는 폰트페밀리입니다 오류
+# library(showtext)
+# library(extrafont)
+# font_import(paths=NULL, recursive = TRUE, prompt=TRUE, pattern=NULL) # 윈도우즈 폰트데이터베이스에서 찾을 수 없는 폰트페밀리입니다 오류
 
 # Plot
 p <- df_01 %>%
@@ -65,102 +66,30 @@ p <- df_01 %>%
 p
 ```
 
-### KBO 리그 팀들의 승률
-
-```{r}
-# https://r-graph-gallery.com/web-horizontal-barplot-with-labels-the-economist.html
-
-# Libraries
-library(grid)
-library(tidyverse)
-library(shadowtext)
-
-# The colors
-BLUE <- "#076fa2"
-RED <- "#E3120B"
-BLACK <- "#202020"
-GREY <- "grey50"
-
-# Basic barchart
-plt <- df %>%
-  ggplot() +
-  geom_col(aes(win_loss_percentage, team), fill = BLUE, width = 0.6)
-plt
-
-# Customize layout
-plt <- plt + 
-  scale_x_continuous(
-    limits = c(0, 25),
-    breaks = seq(0, 55, by = 5), 
-    expand = c(0, 0), # The horizontal axis does not extend to either side
-    position = "top"  # Labels are located on the top
-  ) +
-  # The vertical axis only extends upwards 
-  scale_y_discrete(expand = expansion(add = c(0, 0.5))) +
-  theme(
-    # Set background color to white
-    panel.background = element_rect(fill = "white"),
-    # Set the color and the width of the grid lines for the horizontal axis
-    panel.grid.major.x = element_line(color = "#A8BAC4", size = 0.3),
-    # Remove tick marks by setting their length to 0
-    axis.ticks.length = unit(0, "mm"),
-    # Remove the title for both axes
-    axis.title = element_blank(),
-    # Only left line of the vertical axis is painted in black
-    axis.line.y.left = element_line(color = "black"),
-    # Remove labels from the vertical axis
-    axis.text.y = element_blank(),
-    # But customize labels for the horizontal axis
-    axis.text.x = element_text(family = "Econ Sans Cnd", size = 16)
-  )
-plt
-
-# Add labels
-plt <- plt + 
-  geom_shadowtext(
-    data = subset(df, length(team) < 8),
-    aes(count, y = team, label = team),
-    hjust = 0,
-    nudge_x = 0.3,
-    colour = BLUE,
-    bg.colour = "white",
-    bg.r = 0.2,
-    family = "Econ Sans Cnd",
-    size = 7
-  ) + 
-  geom_text(
-    data = subset(df, length(team) >= 8),
-    aes(0, y = team, label = team),
-    hjust = 0,
-    nudge_x = 0.3,
-    colour = "white",
-    family = "Econ Sans Cnd",
-    size = 7
-  )
-plt
-
-unique(length(df$team)) # 각 팀별 글자수?
-```
-
 ### 
+KBO 리그 승률, 승 : Stacked Funnel Plot
 
-Stacked Funnel Plot
+<https://plotly.com/r/funnel-charts/>
 
 ```{r}
+# https://plotly.com/r/funnel-charts/
+
 # Need to install plotly from Github to get funnel plots
 # devtools::install_github("ropensci/plotly")
 library(plotly)
 
 df_2021 <- subset(df_01, year==2021)
-df_2021
+# sort(df_2021$wins)
+df_2021<-df_2021 |>
+  arrange(desc(wins))
 
 fig <- plot_ly(
     type = "funnel",
     name = 'win_loss_percentage',
     y = df_2021$team,
-    x = df_2021$win_loss_percentage,
-    textposition = "outside",
-    textinfo = "percent initial")
+    x = df_2021$win_loss_percentage*100,
+    textposition = "inside",
+    textinfo = "name+value+percent total")
 
 fig <- fig %>%
   add_trace(
@@ -170,20 +99,10 @@ fig <- fig %>%
     y = df_2021$team,
     x = df_2021$wins,
     textposition = "inside",
-    textinfo = "percent initial")
+    textinfo = "name+value+percent total")
 
 fig <- fig %>%
-  add_trace(
-    type = "funnel",
-    name = 'losses',
-    orientation = "h",
-    y = df_2021$team,
-  x = df_2021$losses,
-  textposition = "inside",
-  textinfo = "value+percent total")
-
-fig <- fig %>%
-  layout(yaxis = list(categoryarray = c("Website visit", "Downloads", "Potential customers", "Requested price", "invoice sent", "Finalized")))
+layout(yaxis = list(categoryarray = df_2021$team))
 
 fig
 ```
