@@ -72,6 +72,8 @@ p <- df_01 |>
 p
 ```
 
+<https://plotly.com/r/violin/>
+
 ```{r}
 library(plotly)
 
@@ -139,6 +141,44 @@ fig <- fig %>%
 
 fig <- fig %>%
   layout(yaxis = list(categoryarray = c(1:6)))
+
+fig
+```
+
+### KBO 선수들의 실책 : 3D Bubble Plot
+
+<https://plotly.com/r/3d-scatter-plots/>
+
+```{r}
+library(plotly)
+
+fig <- plot_ly(df_2021, x = ~runs, y = ~hits, z = ~walks, color = ~team, size = ~wins,
+             marker = list(symbol = 'circle', sizemode = 'diameter'), sizes = c(25, 50),
+             text = ~paste('runs : ', runs, '<br>hits : ', hits, '<br> walks :', walks, '<br> wins : ', wins))
+fig <- fig %>% layout(title = '선수들의 실책',
+                      
+         scene = list(xaxis = list(title = 'runs',
+                      gridcolor = 'rgb(255, 255, 255)',
+                      type = 'log',
+                      zerolinewidth = 1,
+                      ticklen = 5,
+                      gridwidth = 2),
+                      
+               yaxis = list(title = 'hits',
+                      gridcolor = 'rgb(255, 255, 255)',
+                      zerolinewidth = 1,
+                      ticklen = 5,
+                      gridwith = 2),
+               
+               zaxis = list(title = 'walks',
+                            gridcolor = 'rgb(255, 255, 255)',
+                            type = 'log',
+                            zerolinewidth = 1,
+                            ticklen = 5,
+                            gridwith = 2)),
+         
+         paper_bgcolor = 'rgb(243, 243, 243)',
+         plot_bgcolor = 'rgb(243, 243, 243)')
 
 fig
 ```
