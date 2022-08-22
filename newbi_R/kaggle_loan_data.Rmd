@@ -1,0 +1,36 @@
+---
+title: "캐글 대출고객 분류분석"
+author: "BBJ"
+date: "2022-08-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+### 작업공간 확인 및 설정
+```{r}
+setwd('C:\\Users\\user\\Documents\\MyProjectR')
+getwd()
+```
+# 데이터프레임 불러오기
+```{r}
+loanDF <- read.csv('Loan payments data.csv', header = T)
+loanDF
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

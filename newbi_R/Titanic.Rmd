@@ -1,0 +1,57 @@
+---
+title: "타이타닉 데이터 분석"
+author: "BBJ"
+date: "2022-08-08"
+output: html_document
+---
+
+# 데이터 프레임 읽어오기
+# titanic-machine learning from disaster : train.csv
+```{r}
+trainDF <- read.csv('./train.csv', header = T)
+str(trainDF)
+```
+
+# 승객 등급별 사망여부 Pclass
+```{r}
+mosaicplot(Pclass ~ Survived, data = trainDF, col = 2:4)
+```
+
+# 출발 항구별 승객수는 얼마일까?
+```{r}
+table(trainDF$Embarked)
+barplot(table(trainDF$Embarked), col = 2:4)
+```
+
+# 결측치 분포는 어떠할까?
+```{r}
+library(VIM)
+aggr(trainDF, numbers = T, prop = F)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
