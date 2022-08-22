@@ -150,33 +150,61 @@ Stacked Funnel Plot
 # Need to install plotly from Github to get funnel plots
 # devtools::install_github("ropensci/plotly")
 library(plotly)
-df$losses
+
+df_2021 <- subset(df_01, year==2021)
+df_2021
+
 fig <- plot_ly(
     type = "funnel",
     name = 'win_loss_percentage',
-    y = c("Website visit", "Downloads", "Potential customers", "Requested price"),
-    x = c(120, 60, 30, 20),
-    textinfo = "value+percent initial") 
+    y = df_2021$team,
+    x = df_2021$win_loss_percentage,
+    textposition = "outside",
+    textinfo = "percent initial")
+
 fig <- fig %>%
   add_trace(
     type = "funnel",
     name = 'wins',
     orientation = "h",
-    y = c("Website visit", "Downloads", "Potential customers", "Requested price", "invoice sent"),
-    x = c(100, 60, 40, 30, 20),
+    y = df_2021$team,
+    x = df_2021$wins,
     textposition = "inside",
-    textinfo = "value+percent previous") 
+    textinfo = "percent initial")
+
 fig <- fig %>%
   add_trace(
     type = "funnel",
     name = 'losses',
     orientation = "h",
-    y = c("Website visit", "Downloads", "Potential customers", "Requested price", "invoice sent", "Finalized"),
-  x = c(90, 70, 50, 30, 10, 5),
-  textposition = "outside",
-  textinfo = "value+percent total") 
+    y = df_2021$team,
+  x = df_2021$losses,
+  textposition = "inside",
+  textinfo = "value+percent total")
+
 fig <- fig %>%
-  layout(yaxis = list(categoryarray = c(df_01$team)))
+  layout(yaxis = list(categoryarray = c("Website visit", "Downloads", "Potential customers", "Requested price", "invoice sent", "Finalized")))
 
 fig
+```
+
+```{r}
+
+fig <- plot_ly(
+    type = "funnel",
+    name = 'win_loss_percentage',
+    y = df_01$team,
+    x = c(df_01$win_loss_percentage),
+    textinfo = "value+percent initial")
+
+
+
+fig <- fig %>%
+  layout(yaxis = list(categoryarray = c("Website visit", "Downloads", "Potential customers", "Requested price", "invoice sent", "Finalized")))
+```
+
+```{r}
+df_01<-subset(df_01, year==2021)
+
+add_tr
 ```
