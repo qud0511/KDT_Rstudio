@@ -51,6 +51,7 @@ library(tidyr)
 library(forcats)
 library(hrbrthemes)
 library(viridis)
+library(plotly)
 
 # library(extrafont)
 # font_import(paths=NULL, recursive = TRUE, prompt=TRUE, pattern=NULL) # "윈도우즈 폰트데이터베이스에서 찾을 수 없는 폰트페밀리입니다" 오류 해결, 30분 이상 소요
@@ -69,6 +70,7 @@ p <- df_01 |>
     coord_flip() + # This switch X and Y axis and allows to get the horizontal version
     xlab("") +
     ylab("age")
+
 p
 ```
 
@@ -101,6 +103,61 @@ fig <- fig %>%
       zeroline = F
     )
   )
+
+fig
+```
+
+```{r}
+unique(df_01$team)
+```
+
+```{r}
+library(plotly)
+
+accumulate_by <- function(dat, var) {
+  var <- lazyeval::f_eval(var, dat)
+  lvls <- plotly:::getLevels(var)
+  dats <- lapply(seq_along(lvls), function(x) {
+    cbind(dat[var %in% lvls[seq(1, x)], ], frame = lvls[[x]])
+  })
+  dplyr::bind_rows(dats)
+}
+
+fig <- df_01 %>%
+  filter(year > 1981, team %in% c("Doosan Bears", "LG Twins", "Samsung Lions", "Hanwha Eagles", "Kia Tigers", "Lotte Giants"))
+fig <- fig %>% accumulate_by(~year)
+
+
+fig <- fig %>%
+  plot_ly(
+    x = ~year, 
+    y = ~average_age,
+    split = ~team,
+    frame = ~frame,
+    type = 'scatter',
+    mode = 'lines', 
+    line = list(simplyfy = F)
+  )
+fig <- fig %>% layout(
+  xaxis = list(
+    title = "Date",
+    zeroline = F
+  ),
+  yaxis = list(
+    title = "average_age",
+    zeroline = F
+  )
+) 
+fig <- fig %>% animation_opts(
+  frame = 100, 
+  transition = 0, 
+  redraw = FALSE
+)
+fig <- fig %>% animation_slider(
+  currentvalue = list(
+    prefix = "year"
+  )
+)
 
 fig
 ```
