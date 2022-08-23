@@ -267,39 +267,22 @@ library(rgdal)
 
 library(raster)
 
-#Here, I load a map with the raster package.
-loadzip = tempfile() 
-# download.file("https://tylermw.com/data/dem_01.tif.zip", loadzip)
-localtif  <- raster(unzip(loadzip, "dem_01.tif"))
-unlink(loadzip)
-
-#And convert it to a matrix:
-elmat = raster_to_matrix(localtif)
-
-#We use another one of rayshader's built-in textures:
-elmat %>%
-  sphere_shade(texture = "desert") %>%
-  plot_map()
+library(viridis)
 ```
 
 ```{r}
-data("mtcars")
-data.frame(mtcars)
+library(ggplot2)
 
 mtplot <-  ggplot(mtcars) + 
   geom_point(aes(x = mpg, y = disp, color = cyl)) + 
   scale_color_continuous(limits = c(0, 8))
 
 par(mfrow = c(1, 2))
-plot_geo(mtplot, width = 3.5, raytrace = FALSE, preview = TRUE)
+plot_gg(mtplot, width = 3.5, raytrace = FALSE, preview = TRUE)
 
-plot_geo(mtplot, width = 3.5, multicore = TRUE, windowsize = c(800, 800), 
+plot_gg(mtplot, width = 3.5, multicore = TRUE, windowsize = c(800, 800), 
         zoom = 0.85, phi = 35, theta = 30, sunangle = 225, soliddepth = -100)
 Sys.sleep(0.2)
 render_snapshot(clear = TRUE)
-
-```
-
-```{r}
 
 ```
