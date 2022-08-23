@@ -1,7 +1,8 @@
 ---
-title: "PBJ 야구"
-format: html
-editor: visual
+title: "박병준 KBO리그 시각화"
+author: "BBJ"
+date: "2022-08-23"
+output: html_document
 ---
 
 ### 데이터 전처리
@@ -14,7 +15,7 @@ knitr::opts_chunk$set(message = F)
 ```{r}
 df <- read.csv("kbopitchingdata.csv")
 # View(df)
-str(df)
+# str(df)
 
 # 결측치가 있어서 필요 없는 컬럼 제거
 df_01 <- subset(df, select=-c(games_started,games_finished,intentional_walks, balks, wild_pitches))
@@ -302,3 +303,4 @@ render_highquality(lightdirection = c(-45,45), lightaltitude  = 30, clamp_value 
                    ground_material = diffuse(color="grey50",checkercolor = "grey20", checkerperiod = 100),
                    clear = TRUE)
 ```
+
