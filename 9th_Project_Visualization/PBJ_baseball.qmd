@@ -107,9 +107,7 @@ fig <- fig %>%
 fig
 ```
 
-```{r}
-unique(df_01$team)
-```
+<https://plotly.com/r/cumulative-animations/>
 
 ```{r}
 library(plotly)
@@ -162,8 +160,7 @@ fig <- fig %>% animation_slider(
 fig
 ```
 
-### 
-KBO 리그 승률, 승 : Stacked Funnel Plot
+### KBO 리그 승률, 승 : Stacked Funnel Plot
 
 <https://plotly.com/r/funnel-charts/>
 
@@ -238,4 +235,41 @@ fig <- fig %>% layout(title = '선수들의 실책',
          plot_bgcolor = 'rgb(243, 243, 243)')
 
 fig
+```
+
+### rayshader
+
+<https://www.rayshader.com/index.html>
+
+```{r}
+# To install the latest version from Github:
+# install.packages("devtools")
+# devtools::install_github("tylermorganwall/rayshader")
+
+library(rayrender)
+
+# install.packages("rayrender")
+
+## 
+## Attaching package: 'rayrender'
+
+## The following object is masked from 'package:rgl':
+## 
+##     text3d
+
+montereybay %>%
+    sphere_shade(zscale = 10, texture = "imhof1") %>%
+    plot_3d(montereybay, zscale = 50, fov = 70, theta = 270, phi = 30, 
+            windowsize = c(1000, 800), zoom = 0.6,  
+            water = TRUE, waterdepth = 0, wateralpha = 0.5, watercolor = "#233aa1",
+            waterlinecolor = "white", waterlinealpha = 0.5)
+Sys.sleep(0.2)
+render_highquality(lightdirection = c(-45,45), lightaltitude  = 30, clamp_value = 10, 
+                   samples = 256, camera_lookat= c(0,-50,0),
+                   ground_material = diffuse(color="grey50",checkercolor = "grey20", checkerperiod = 100),
+                   clear = TRUE)
+```
+
+```{r}
+
 ```
