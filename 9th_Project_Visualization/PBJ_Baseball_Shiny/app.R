@@ -6,7 +6,6 @@ library(forcats)
 library(hrbrthemes)
 library(viridis)
 library(plotly)
-
 # To install the latest version from Github:
 # install.packages("devtools")
 # devtools::install_github("tylermorganwall/rayshader")
@@ -28,13 +27,9 @@ library(raster)
 
 
 df <- read.csv("kbopitchingdata.csv")
-# View(df)
-# str(df)
 
-# 결측치가 있어서 필요 없는 컬럼 제거
 df_01 <- subset(df, select=-c(games_started,games_finished,intentional_walks, balks, wild_pitches))
 
-# 연도별 바뀐 팀들을 현대의 이름으로 재정렬
 for (i in (1:length(df_01$team))){
   if(df_01$team[i] == 'MBC Blue Dragons'){
     df_01$team[i] = 'LG Twins'
@@ -55,6 +50,7 @@ for (i in (1:length(df_01$team))){
 
 
 
+
 ui<-pageWithSidebar(
   headerPanel(h1('BJ')),
   
@@ -69,11 +65,11 @@ ui<-pageWithSidebar(
       tabPanel("bubble",
                plotlyOutput('bubble')),
       tabPanel("first_vio",
-               dataTableOutput('first_vio')),
+               plotOutput('first_vio')),
       tabPanel("second_vio",
-               dataTableOutput('second_vio')),
+               plotlyOutput('second_vio')),
       tabPanel("cum",
-               dataTableOutput('cum')),
+               plotlyOutput('cum')),
       tabPanel("rayshader",
                dataTableOutput('rayshader'))
     )
@@ -97,7 +93,7 @@ server<-function (input, output) {
       coord_flip() + # This switch X and Y axis and allows to get the horizontal version
       xlab("") +
       ylab("age")+
-      ggtitle("          KBO 리그 선수들의 평균나이(1982~2021)")
+      ggtitle("     KBO 리그 선수들의 평균나이(1982~2021)")
   })
   
   output$second_vio<-renderPlotly({
@@ -262,6 +258,9 @@ server<-function (input, output) {
     montereybay
     })
 }
+
+
+
 
 shinyApp(ui, server)
 

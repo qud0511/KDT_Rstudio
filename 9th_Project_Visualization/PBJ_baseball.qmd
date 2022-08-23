@@ -206,6 +206,8 @@ fig
 ```{r}
 library(plotly)
 
+df_2021 <- df_2021[order(df_2021$team), ]
+
 fig <- plot_ly(df_2021, x = ~runs, y = ~hits, z = ~walks, color = ~team, size = ~wins,
              marker = list(symbol = 'circle', sizemode = 'diameter'), sizes = c(25, 50),
              text = ~paste('runs : ', runs, '<br>hits : ', hits, '<br> walks :', walks, '<br> wins : ', wins))
