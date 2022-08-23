@@ -6,27 +6,15 @@ library(forcats)
 library(hrbrthemes)
 library(viridis)
 library(plotly)
-# To install the latest version from Github:
-# install.packages("devtools")
-# devtools::install_github("tylermorganwall/rayshader")
+
 library(devtools)
 
-library(rayrender)
 
-## 
-## Attaching package: 'rayrender'
-
-## The following object is masked from 'package:rgl':
-## 
-##     text3d
-
-library(rgl)
 library(rayshader)
-library(rgdal)
-library(raster)
 
 
-df <- read.csv("kbopitchingdata.csv")
+
+df <- read.csv("kbopitchingdata.csv", encoding = "UTF-8")
 
 df_01 <- subset(df, select=-c(games_started,games_finished,intentional_walks, balks, wild_pitches))
 
@@ -60,18 +48,20 @@ ui<-pageWithSidebar(
   
   mainPanel(
     tabsetPanel(
+      tabPanel("first_violin",
+               plotOutput('first_vio')),
+      tabPanel("second_violin",
+               plotlyOutput('second_vio')),
+      tabPanel("cumulative",
+               plotlyOutput('cum')),
       tabPanel("funnel",
                plotlyOutput('funnel')),
-      tabPanel("bubble",
+      tabPanel("bubble 3d",
                plotlyOutput('bubble')),
-      tabPanel("first_vio",
-               plotOutput('first_vio')),
-      tabPanel("second_vio",
-               plotlyOutput('second_vio')),
-      tabPanel("cum",
-               plotlyOutput('cum')),
+      tabPanel("rayshader02",
+               plotlyOutput('rayshader02')),
       tabPanel("rayshader",
-               dataTableOutput('rayshader'))
+               plotlyOutput('rayshader'))
     )
   )
 )
@@ -248,17 +238,33 @@ server<-function (input, output) {
   output$rayshader <- renderPlotly({
     montereybay %>%
       sphere_shade(zscale = 10, texture = "imhof1") %>%
-      plot_3d(montereybay, zscale = 50, fov = 70, theta = 270, phi = 30, 
-              windowsize = c(1000, 800), zoom = 0.6,  
+      plot_3d(montereybay, zscale = 50, fov = 70, theta = 270, phi = 30,
+              windowsize = c(1000, 800), zoom = 0.6,
               water = TRUE, waterdepth = 0, wateralpha = 0.5, watercolor = "#233aa1",
               waterlinecolor = "white", waterlinealpha = 0.5)
     Sys.sleep(0.2)
-    render_highquality(lightdirection = c(-45,45), lightaltitude  = 30, clamp_value = 10, 
+    render_highquality(lightdirection = c(-45,45), lightaltitude  = 30, clamp_value = 10,
                        samples = 256, camera_lookat= c(0,-50,0),
                        ground_material = diffuse(color="grey50",checkercolor = "grey20", checkerperiod = 100),
                        clear = TRUE)
 
     })
+  
+  output$rayshader02 <- renderPlotly({
+    ggdiamonds = ggplot(diamonds) +
+      stat_density_2d(aes(x = x, y = depth, fill = stat(nlevel)), 
+                      geom = "polygon", n = 200, bins = 50,contour = TRUE) +
+      facet_wrap(clarity~.) +
+      scale_fill_viridis_c(option = "A")
+    
+    par(mfrow = c(1, 2))
+    
+    plot_gg(ggdiamonds, width = 5, height = 5, raytrace = FALSE, preview = TRUE)
+    plot_gg(ggdiamonds, width = 5, height = 5, multicore = TRUE, scale = 250, 
+            zoom = 0.7, theta = 10, phi = 30, windowsize = c(800, 800))
+    Sys.sleep(0.2)
+    render_snapshot(clear = TRUE)
+  })
 }
 
 
