@@ -211,7 +211,9 @@ server<-function (input, output) {
   })
   
   output$bubble<-renderPlotly({
-    df_2021 <- subset(df_01, year==input$year) 
+    
+    df_2021 <- subset(df_01, year==input$year)
+    df_2021 <- df_2021[order(df_2021$team), ]
     fig <- plot_ly(df_2021, x = ~runs, y = ~hits, z = ~walks, color = ~team, size = ~wins,
                    marker = list(symbol = 'circle', sizemode = 'diameter'), sizes = c(25, 50),
                    text = ~paste('runs : ', runs, '<br>hits : ', hits, '<br> walks :', walks, '<br> wins : ', wins))
@@ -255,7 +257,7 @@ server<-function (input, output) {
                        samples = 256, camera_lookat= c(0,-50,0),
                        ground_material = diffuse(color="grey50",checkercolor = "grey20", checkerperiod = 100),
                        clear = TRUE)
-    montereybay
+
     })
 }
 
