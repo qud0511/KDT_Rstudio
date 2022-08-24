@@ -101,13 +101,13 @@ aXR1ZGWUSwKMCExhdGl0dWRllEsCjAZBdXRob3KUSwF1jAVtZXRhc5R9lCiMClNvdXJjZSBVUkyU
 SwNoFksDjA9PcmlnaW5hbCBhdXRob3KUSwOMBVBsYWNllEsDdXViYXUu
 </properties>
 		<properties node_id="2" format="pickle">gASVvwAAAAAAAAB9lCiMEmNvbnRyb2xBcmVhVmlzaWJsZZSIjBNzYXZlZFdpZGdldEdlb21ldHJ5
-lENCAdnQywADAAAAAAH9AAABAwAABYIAAAMWAAAB/gAAASIAAAWBAAADFQAAAAAAAAAAB4AAAAH+
+lENCAdnQywADAAAAAAH+AAABIgAABYEAAAMVAAAB/gAAASIAAAWBAAADFQAAAAAAAAAAB4AAAAH+
 AAABIgAABYEAAAMVlIwOc2VsZWN0ZWRfd29yZHOUj5QojAM6Ly+UkIwLd29yZHNfY29sb3KUiIwK
 d29yZHNfdGlsdJRLAIwLX192ZXJzaW9uX1+USwF1Lg==
 </properties>
 		<properties node_id="3" format="literal">{'autocommit': True, 'controlAreaVisible': True, 'savedWidgetGeometry': None, 'storedsettings': {'name': '', 'preprocessors': [('preprocess.transform', {}), ('preprocess.tokenize', {}), ('preprocess.filter', {})]}, '__version__': 3}</properties>
 		<properties node_id="4" format="pickle">gASVwgAAAAAAAAB9lCiMEmNvbnRyb2xBcmVhVmlzaWJsZZSIjBNzYXZlZFdpZGdldEdlb21ldHJ5
-lENCAdnQywADAAAAAAH9AAABAwAABYIAAAMWAAAB/gAAASIAAAWBAAADFQAAAAAAAAAAB4AAAAH+
+lENCAdnQywADAAAAAAH+AAABIgAABYEAAAMVAAAB/gAAASIAAAWBAAADFQAAAAAAAAAAB4AAAAH+
 AAABIgAABYEAAAMVlIwOc2VsZWN0ZWRfd29yZHOUj5QojAZkb25hbGSUkIwLd29yZHNfY29sb3KU
 iIwKd29yZHNfdGlsdJRLAYwLX192ZXJzaW9uX1+USwF1Lg==
 </properties>
@@ -151,7 +151,7 @@ bgAAAHQAAAAgAAAAMQAAAJSGlFKUYWgGSwF1jAphdHRyaWJ1dGVzlCmMBW1ldGFzlGgUSwOGlIWU
 jApjbGFzc192YXJzlGgSXZQojAVhZHVsdJSMCGNoaWxkcmVulGWGlIWUdWJhdS4=
 </properties>
 		<properties node_id="9" format="literal">{'autocommit': True, 'controlAreaVisible': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x02\x1a\x00\x00\x01\x03\x00\x00\x05e\x00\x00\x03\x16\x00\x00\x02\x1b\x00\x00\x01"\x00\x00\x05d\x00\x00\x03\x15\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x02\x1b\x00\x00\x01"\x00\x00\x05d\x00\x00\x03\x15', 'storedsettings': {'name': '', 'preprocessors': [('preprocess.transform', {}), ('preprocess.tokenize', {}), ('preprocess.filter', {})]}, '__version__': 3}</properties>
-		<properties node_id="10" format="literal">{'autocommit': True, 'controlAreaVisible': True, 'hidden_cb': True, 'normalization': '(None)', 'savedWidgetGeometry': None, 'wglobal': '(None)', 'wlocal': 'Count', '__version__': 1}</properties>
+		<properties node_id="10" format="literal">{'autocommit': True, 'controlAreaVisible': True, 'hidden_cb': True, 'normalization': '(None)', 'savedWidgetGeometry': b"\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x03'\x00\x00\x01\xbc\x00\x00\x04X\x00\x00\x02|\x00\x00\x03'\x00\x00\x01\xbc\x00\x00\x04X\x00\x00\x02|\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x03'\x00\x00\x01\xbc\x00\x00\x04X\x00\x00\x02|", 'wglobal': '(None)', 'wlocal': 'Count', '__version__': 1}</properties>
 		<properties node_id="11" format="literal">{'auto_commit': True, 'color_by_class': True, 'controlAreaVisible': True, 'dist_color_RGB': (220, 220, 220, 255), 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x02/\x00\x00\x01\x03\x00\x00\x05P\x00\x00\x03\x16\x00\x00\x020\x00\x00\x01"\x00\x00\x05O\x00\x00\x03\x15\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x020\x00\x00\x01"\x00\x00\x05O\x00\x00\x03\x15', 'select_rows': True, 'selected_cols': [], 'selected_rows': [], 'show_attribute_labels': True, 'show_distributions': False, '__version__': 2}</properties>
 		<properties node_id="12" format="pickle">gASVtwAAAAAAAAB9lCiMEmNvbnRyb2xBcmVhVmlzaWJsZZSIjBNzYXZlZFdpZGdldEdlb21ldHJ5
 lENCAdnQywADAAAAAAH9AAABAwAABYIAAAMWAAAB/gAAASIAAAWBAAADFQAAAAAAAAAAB4AAAAH+
