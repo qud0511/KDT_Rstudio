@@ -1,2 +1,2 @@
-# JUN_Rstudio
+# KDT_Rstudio
 R &amp; Rstudio
